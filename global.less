@@ -1,0 +1,104 @@
+@import url("./css/element-ui.css");
+
+@font-face {
+    font-family: element-icons;
+    src: url(fonts/element-icons.woff?t=1472440741) format('woff'), url(fonts/element-icons.ttf?t=1472440741) format('truetype');
+    font-weight: 400;
+    font-style: normal
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+.container {
+
+    .list {
+        width: 70%;
+        margin: 0 auto 12px;
+    }
+}
+
+.header {
+    width: 100%;
+    line-height: 80px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgb(187, 174, 174);
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.preview {
+    width: 640px;
+    height: 360px;
+    border: 1px solid #000;
+    margin: 8px auto;
+    position: fixed;
+    top: 200px;
+    left: 50%;
+    // margin-left: -320px;
+    z-index: 10;
+}
+
+.add-btn {
+    /* padding: 12px 0px; */
+    /* box-sizing: border-box; */
+    margin: 12px 0;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.item .tips {
+    width: 420px;
+    display: flex;
+    align-items: center;
+}
+
+.item .tips audio {
+    width: 320px;
+    height: 34px;
+    outline: none;
+}
+
+.bg-img .el-upload-dragger {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* transition组件动画 */
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity .3s;
+}
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+    {
+    opacity: 0;
+}
