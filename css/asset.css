@@ -1,0 +1,104 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.vertical {
+    overflow-y: auto;
+    height: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.horizontal {
+    padding: 2px;
+    display: flex;
+}
+
+.assetNameBox {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+    background-color: rgb(168, 168, 168);
+    color: rgb(255, 255, 255);
+}
+
+.assetNameBtn {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.assetNameBar {
+    display: flex;
+    margin: 5px;
+}
+
+.title {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.assetBox {
+    height: 500px;
+}
+
+.assetList {
+    border: 1px solid;
+    margin: 10px;
+    flex: 2;
+    height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 5px;
+}
+
+.assetTab {
+    height: 400px;
+}
+
+.avatar-uploader .el-upload {
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 140px;
+}
+
+.el-upload-dragger {
+    width: 100%;
+    height: 140px;
+}
+
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100%;
+    height: 140px;
+    line-height: 140px;
+    text-align: center;
+}
+
+.avatar {
+    width: 100%;
+    height: 140px;
+    display: block;
+}
+
+.imagreView {
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}

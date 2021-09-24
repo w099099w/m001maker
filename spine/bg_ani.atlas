@@ -1,0 +1,27 @@
+
+bg_ani.png
+size: 244,59
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+car
+  rotate: false
+  xy: 2, 2
+  size: 97, 55
+  orig: 97, 55
+  offset: 0, 0
+  index: -1
+treehead
+  rotate: false
+  xy: 174, 4
+  size: 68, 53
+  orig: 68, 53
+  offset: 0, 0
+  index: -1
+treetail
+  rotate: false
+  xy: 101, 2
+  size: 71, 55
+  orig: 71, 55
+  offset: 0, 0
+  index: -1

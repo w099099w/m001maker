@@ -2,14 +2,16 @@
 const instance = axios.create({ timeout: 1000 * 12 });
 
 let loading;
-function startLoading() {    //使用Element loading-start 方法
+
+function startLoading() { //使用Element loading-start 方法
     loading = ELEMENT.Loading.service({
         lock: true,
         text: '加载中……',
         background: 'rgba(0, 0, 0, 0.7)'
     });
 }
-function endLoading() {    //使用Element loading-close 方法
+
+function endLoading() { //使用Element loading-close 方法
     loading.close();
 }
 
@@ -26,23 +28,36 @@ instance.interceptors.request.use(
 );
 /****** response拦截器 ==> 对响应做处理 ******/
 instance.interceptors.response.use(
-    response => {  //成功请求到数据
+    response => { //成功请求到数据
         endLoading();
         if (response.data.code === 400 || response.data.code === 401) { //未经授权时，统一处理
 
         }
         return response.data;
     },
-    error => {  //响应错误处理
+    error => { //响应错误处理
+        endLoading();
         return Promise.reject(error)
     }
 )
 
-const baseUrl = "http://10.0.30.109:9999";
+const baseUrl = "http://coolarr.com:1274";
 
 const http = {
     // 获取用户数据
     login(params) {
-        return instance.post(`${baseUrl}/back/admin/login`, params)
+        return instance.post(`${baseUrl}/Maker/Login`, params);
+    },
+    sendFileChunk(params) {
+        return instance.post(`${baseUrl}/Maker/Assets/UpLoadChunk`, params);
+    },
+    sendFile(params) {
+        return instance.post(`${baseUrl}/Maker/Assets/UpLoadFile`, params);
+    },
+    mergeFileChunk(params) {
+        return instance.post(`${baseUrl}/Maker/Assets/MergeFileChunk`, params);
+    },
+    generateUploadId(params) {
+        return instance.post(`${baseUrl}/Maker/Assets/GenerateUploadId`, params);
     }
 }

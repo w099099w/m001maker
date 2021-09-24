@@ -30,6 +30,17 @@
   justify-content: space-between;
   z-index: 10;
 }
+.test {
+  width: 450px;
+  height: 150px ;
+  border: 1px solid springgreen;
+}
+.t {
+  width: 400px;
+  height: auto;
+  word-wrap: break-word;
+  word-break: break-all;
+}
 .preview {
   width: 640px;
   height: 360px;
@@ -40,6 +51,153 @@
   left: 50%;
   z-index: 10;
 }
+.preview .bgImage {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+.preview .quitButton {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 70px;
+  height: 70px;
+}
+.preview .questionBar {
+  position: absolute;
+  left: 70px;
+  top: 0px;
+  width: 390px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview .questionBar .Image {
+  position: absolute;
+  width: 390px;
+  height: 70px;
+}
+.preview .questionBar .titleText {
+  position: absolute;
+  width: 333px;
+  line-height: 18px;
+  text-align: center;
+  word-wrap: break-word;
+  word-break: break-all;
+  font-size: 14px;
+}
+.preview .questionNumberBg {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 96px;
+  height: 66px;
+}
+.preview .a101 {
+  position: absolute;
+  width: 304px;
+  height: 66px;
+  left: 12px;
+  bottom: 80px;
+}
+.preview .a102 {
+  position: absolute;
+  width: 304px;
+  height: 66px;
+  right: 12px;
+  bottom: 80px;
+}
+.preview .a103 {
+  position: absolute;
+  width: 304px;
+  height: 66px;
+  left: 12px;
+  bottom: 11px;
+}
+.preview .a104 {
+  position: absolute;
+  width: 304px;
+  height: 66px;
+  right: 12px;
+  bottom: 11px;
+}
+.preview .a203 {
+  position: absolute;
+  width: 304px;
+  height: 66px;
+  left: 168px;
+  bottom: 11px;
+}
+.preview .a301 {
+  position: absolute;
+  width: 304px;
+  height: 136px;
+  left: 12px;
+  bottom: 11px;
+}
+.preview .a302 {
+  position: absolute;
+  width: 304px;
+  height: 136px;
+  right: 12px;
+  bottom: 11px;
+}
+.preview .a401 {
+  position: absolute;
+  width: 200px;
+  height: 136px;
+  left: 12px;
+  bottom: 11px;
+}
+.preview .a402 {
+  position: absolute;
+  width: 200px;
+  height: 136px;
+  left: 220px;
+  bottom: 11px;
+}
+.preview .a403 {
+  position: absolute;
+  width: 200px;
+  height: 136px;
+  right: 12px;
+  bottom: 11px;
+}
+.preview .a501 {
+  position: absolute;
+  width: 146px;
+  height: 136px;
+  left: 12px;
+  bottom: 11px;
+}
+.preview .a502 {
+  position: absolute;
+  width: 146px;
+  height: 136px;
+  left: 170px;
+  bottom: 11px;
+}
+.preview .a503 {
+  position: absolute;
+  width: 146px;
+  height: 136px;
+  left: 325px;
+  bottom: 11px;
+}
+.preview .a504 {
+  position: absolute;
+  width: 146px;
+  height: 136px;
+  right: 12px;
+  bottom: 11px;
+}
+.left {
+  width: 100px;
+}
+.right {
+  width: 100px;
+}
 .add-btn {
   /* padding: 12px 0px; */
   /* box-sizing: border-box; */
@@ -48,28 +206,118 @@
 .item {
   display: flex;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 3px;
+  height: 30px;
+}
+.item el-select {
+  float: right;
 }
 .item .tips {
-  width: 420px;
+  width: 320px;
   display: flex;
   align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  float: left;
+}
+.myinputText {
+  width: 400px;
+}
+.myinputText .el-input__inner {
+  height: 30px;
+}
+.layout {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+.layout .loadRes {
+  display: flex;
+  width: 22%;
 }
 .item .tips audio {
   width: 320px;
   height: 34px;
   outline: none;
 }
+.inlineItem {
+  display: block;
+  align-items: center;
+  margin-top: 3px;
+}
+.inlineItem .target {
+  width: 320px;
+  height: 30px;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  line-height: 30px;
+}
+.myinput,
+.el-input-number {
+  line-height: 27px;
+  width: 100px;
+}
+.myinput .el-input__inner,
+.el-input-number .el-input__inner {
+  height: 27px;
+}
+.myinput .el-input-number__decrease,
+.el-input-number .el-input-number__decrease,
+.myinput .el-input-number__increase,
+.el-input-number .el-input-number__increase {
+  height: 12.5px !important;
+  line-height: 14px !important;
+  width: 19px;
+}
+.my-el-select {
+  width: 200px;
+  /* selecte 框的高度设置，默认是 40px*/
+  /* 下面设置右侧按钮居中 */
+}
+.my-el-select .el-input__inner {
+  height: 30px;
+}
+.my-el-select .el-input__suffix {
+  top: 5px;
+}
+.my-el-select .el-input__icon {
+  line-height: inherit;
+}
+.my-el-select .el-input__suffix-inner {
+  display: inline-block;
+}
+.el-popper[x-placement^=bottom] {
+  margin-top: 7px;
+}
+.el-tabs__content {
+  position: relative;
+  height: 75vh;
+  overflow-y: auto;
+}
+.audioList {
+  display: flex;
+  margin-top: 3px;
+}
 .bg-img .el-upload-dragger {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .bg-img .el-upload-dragger img {
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 54px;
+}
+.dialogimage {
+  display: flex;
+  justify-content: center;
+}
+.dialogimage img {
+  max-width: 384px;
+  max-height: 216px;
 }
 /* transition组件动画 */
 .fade-enter-active,

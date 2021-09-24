@@ -2,158 +2,232 @@
 <html lang="zh-CN">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>M006</title>
-  <!-- 引入样式 -->
-  <link rel="stylesheet" href="./global.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M001Maker</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="./global.css">
+    <link rel="stylesheet" type="text/css" href="./css/asset.css">
 </head>
 
 <body>
-  <div id="app" v-cloak>
-    <div class="container">
-      <div style="height: 80px;"></div>
-      <div class="header">
-        <h1>M006Maker</h1>
-        <div>
-          <el-button size="small" @click="exportConfig" type="primary">导出</el-button>
-          <el-button size="small" @click="preview" type="primary">预览</el-button>
-        </div>
-      </div>
-      <div class="preview">
 
-      </div>
-      <div class="list">
-        <el-button class="add-btn" size="small" @click="addTab">
-          添加题库
-        </el-button>
-        <el-tabs v-model="editableTabsValue" type="card" @tab-click="changTabs">
-          <el-tab-pane v-for="(item, index) in editableTabs" :key="item.name" :label="item.title" :name="item.name">
-            <div v-if="index==0">
-              <div class="item">
-                <span class="tips">剧情动画:</span>
-                <el-switch v-model="config.plot" active-text="有" inactive-text="无">
-                </el-switch>
-              </div>
-              <transition name="fade">
-                <div v-if="config.plot" class="item">
-                  <span class="tips">剧情动画:</span>
-                  <el-switch v-model="config.plot" active-text="有" inactive-text="无">
-                  </el-switch>
+    <div id="app" v-cloak>
+        <div class="container">
+            <div style="height: 80px;"></div>
+            <div class="header">
+                <h1>M001Maker</h1>
+                <div>
+                    <el-button size="small" @click="exportConfig" type="primary">导出</el-button>
+                    <el-button size="small" @click="preview" type="primary">预览</el-button>
                 </div>
-              </transition>
-              <div class="item">
-                <span class="tips">长时间不操作的引导语音播放同时是否触发正确答案提示:</span>
-                <el-switch v-model="config.controlTwinkle" active-text="有" inactive-text="无">
-                </el-switch>
-              </div>
-              <div class="item">
-                <div class="tips">背景音乐：<audio v-if="config.bgmUrl_utils" :src="config.bgmUrl_utils" controls></audio>
-                </div>
-                <el-upload class="upload-demo" action="" :http-request="submit"
-                  :before-upload="beforeUpload.bind(this,'PNG')" accept="audio/mpeg" :show-file-list="false">
-                  <el-button size="small" type="primary">点击上传</el-button>
-                </el-upload>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
-              <div class="item">
-                <div class="tips">背景图片：<el-upload class="bg-img" action="#" drag :http-request="handleAvatarSuccess"
-                    :show-file-list="false">
-                    <img v-if="config.bgImgUrl_utils" :src="config.bgImgUrl_utils">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </div>
-              </div>
             </div>
-            <div v-else>
-              <div class="item">
-                <span class="tips">布局：{{currentQuestion.layout}}</span>
-                <el-radio-group v-model="currentQuestion.layout">
-                  <el-radio-button label="A"></el-radio-button>
-                  <el-radio-button label="B"></el-radio-button>
-                  <el-radio-button label="C"></el-radio-button>
-                </el-radio-group>
-              </div>
-              <div class="remove">
-                <el-button @click="removeTab" size="small" type="primary">删除</el-button>
-              </div>
+            <div v-if="editableTabsValue!='0'" class="preview">
+                <img class='bgImage' v-if="previewData.BaseConfig.BgSetting.centerRes" :src="previewData.BaseConfig.BgSetting.centerRes">
+                <img class='quitButton' v-if="previewData.OtherList.Btn_quit" :src="previewData.OtherList.Btn_quit">
+                <div class='questionBar'>
+                    <img class='Image' v-if="previewData.OtherList.QuestionBarImage" :src="previewData.OtherList.QuestionBarImage">
+                    <p class='titleText' v-if="currentQuestion.questionContent">{{currentQuestion.questionContent}}</p>
+                </div>
+
+
+                <img class='questionNumberBg' v-if="previewData.OtherList.QuestionNumBgRes" :src="previewData.OtherList.QuestionNumBgRes">
+
+                <div v-if="editableTabsValue > 1">
+                    <div v-if="currentQuestion.layoutID%5==0">
+                        <img class='a101' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                        <img class='a102' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                        <img class='a103' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                        <img class='a104' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                    </div>
+                    <div v-if="currentQuestion.layoutID%5==1">
+                        <img class='a101' v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
+                        <img class='a102' v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
+                        <img class='a203' v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
+                    </div>
+                    <div v-if="currentQuestion.layoutID%5==2">
+                        <img class='a301' v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
+                        <img class='a302' v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
+                    </div>
+                    <div v-if="currentQuestion.layoutID%5==3">
+                        <img class='a401' v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
+                        <img class='a402' v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
+                        <img class='a403' v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
+                    </div>
+                    <div v-if="currentQuestion.layoutID%5==4">
+                        <img class='a501' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                        <img class='a502' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                        <img class='a503' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                        <img class='a504' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                    </div>
+
+                </div>
             </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
+            <div class="list">
+                <el-button class="add-btn" size="small" @click="addTab">
+                    添加题库
+                </el-button>
+                <el-button v-if="editableTabsValue > 1" class="add-btn" size="small" @click="removeTab">
+                    删除当前题库
+                </el-button>
+                <el-tabs v-model="editableTabsValue" type="card" @tab-click="changTabs" :before-leave="switchTabs">
+                    <el-tab-pane v-for="(item, index) in editableTabs" :key="item.name" :label="item.title" :name="item.name">
+                        <transition name="el-fade-in-linear" @after-leave="pageHidden">
+                            <div v-show="showPage">
+                                <asset v-if="index==0" :onchange="handlePreview" :game_name="makerInfo.gameName"></asset>
+                                <div v-else-if="index==1">
+                                    <my-select-list :data="bgList" :file="fileList" :selectcallback="selectResult"></my-select-list>
+                                    <div v-if="config.BaseConfig.BgSetting.spineRes">
+                                        <div class="item">
+                                            <span class="tips">背景动画播放时长:</span>
+                                            <el-input-number class="myinput" v-model="config.BaseConfig.BgSetting.run" controls-position="right" @change="inputResult($event,'BaseConfig.BgSetting.run')" :precision="2" :step="0.01" :min="0" :max="999"></el-input-number>
+                                        </div>
+                                        <div class="item">
+                                            <span class="tips">背景动画停止时长:</span>
+                                            <el-input-number class="myinput" v-model="config.BaseConfig.BgSetting.idle" controls-position="right" @change="inputResult($event,'BaseConfig.BgSetting.idle')" :precision="2" :step="0.01" :min="0" :max="999"></el-input-number>
+                                        </div>
+                                    </div>
+                                    <my-select-list :data="uiList" :file="fileList" :selectcallback="selectResult"></my-select-list>
+                                    <div class="inlineItem">
+                                        <div v-for="(element,key) in config.OtherList.Button" :key="key" class="audioList">
+                                            <span class="target">布局A{{key+1}}|B{{key+1}}使用的按钮图:</span>
+                                            <el-select class="my-el-select" v-model="Button[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.Button',key)">
+                                                <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <span class="tips">正确提示动画方案:</span>
+                                        <el-select class="my-el-select" v-model="config.BaseConfig.Anim_TipRightPlane" filterable placeholder="请选择" @change="selectResult($event,'bool','BaseConfig.Anim_TipRightPlane')">
+                                            <el-option v-for="citem in rightTipPlane" :key="citem.key" :label="citem.name" :value="citem.key">
+                                            </el-option>
+                                        </el-select>
+                                    </div>
+                                    <el-collapse-transition>
+                                        <div class="item" v-if="config.BaseConfig.Anim_TipRightPlane==1">
+                                            <span class="tips">正确提示动画资源:</span>
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'particle','BaseConfig.Anim_TipRightRes')">
+                                                <el-option v-for="citem in fileList.particle" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="item" v-else-if="config.BaseConfig.Anim_TipRightPlane==2">
+                                            <span class="tips">正确提示动画资源:</span>
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'spine','BaseConfig.Anim_TipRightRes')">
+                                                <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                    </el-collapse-transition>
+                                    <el-collapse-transition>
+                                        <div class="inlineItem" v-if="config.BaseConfig.Anim_TipRightPlane==0">
+                                            <div v-for="(element,key) in config.OtherList.ButtonFlash" :key="key" class="audioList">
+                                                <span class="target">布局A{{key+1}}|B{{key+1}}使用的闪烁图:</span>
+                                                <el-select class="my-el-select" v-model="config.OtherList.ButtonFlash[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.ButtonFlash',key)">
+                                                    <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
+                                                    </el-option>
+                                                </el-select>
+                                            </div>
+                                        </div>
+                                    </el-collapse-transition>
+                                    <div class="item">
+                                        <span class="tips">剧情动画:</span>
+                                        <el-switch v-model="config.BaseConfig.Anim_polt.isEnable" active-color="#13ce66" inactive-color="#808080" active-text="有" inactive-text="无">
+                                        </el-switch>
+                                    </div>
+                                    <my-switch-list :open="config.BaseConfig.Anim_polt.isEnable" :data="plotAnimSwitchList" :selectcallback="selectResult"></my-switch-list>
+                                    <my-select-list :open="config.BaseConfig.Anim_polt.isEnable" :data="plotAnimList" :file="fileList" :selectcallback="selectResult"></my-select-list>
+                                    <div class="item">
+                                        <span class="tips">引导动画:</span>
+                                        <el-switch v-model="config.BaseConfig.Anim_Guide.isEnable" active-color="#13ce66" inactive-color="#808080" active-text="有" inactive-text="无">
+                                        </el-switch>
+                                    </div>
+                                    <my-switch-list :open="config.BaseConfig.Anim_Guide.isEnable" :data="guideSwitchList" :selectcallback="selectResult"></my-switch-list>
+                                    <el-collapse-transition>
+                                        <div class="inlineItem" v-if="config.BaseConfig.Anim_Guide.isEnable">
+                                            <div class="item">
+                                                <div class="tips">引导动画资源:</div>
+                                                <el-select class="my-el-select" v-model="config.OtherList.spine.guideAnim.src" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.spine.guideAnim.src')">
+                                                    <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
+                                                    </el-option>
+                                                </el-select>
+                                            </div>
+                                            <div class="item">
+                                                <span class="tips">引导动画配音资源数量:</span>
+                                                <el-input-number class="myinput" v-model="guideSize" controls-position="right" :min="1" :max="9"></el-input-number>
+                                            </div>
+                                            <div v-for="(element,key) in config.BaseConfig.Anim_Guide.src" :key="key" class="audioList">
+                                                <span class="target">步骤{{key+1}}使用的配音:</span>
+                                                <el-select class="my-el-select" v-model="config.BaseConfig.Anim_Guide.src[key]" filterable placeholder="请选择" @change="selectResult($event,'array','BaseConfig.Anim_Guide.src',key)">
+                                                    <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                    </el-option>
+                                                </el-select>
+                                            </div>
+                                        </div>
+                                    </el-collapse-transition>
+                                    <my-switch-list :data="manualSwitchList" :selectcallback="selectResult"></my-switch-list>
+                                    <my-inputnumber-list :data=outTimeinputList :selectcallback="inputResult"></my-inputnumber-list>
+                                    <my-select-list :data="selectEffectList" :file="fileList" :selectcallback="selectResult"></my-select-list>
+                                    <my-switch-list :data="openStepAnimSwitch" :selectcallback="selectResult"></my-switch-list>
+                                    <my-switch-list v-if="config.BaseConfig.Select_Right.playRewardAnim" :data="stepAnimSwitchList" :selectcallback="selectResult "></my-switch-list>
+                                    <my-switch-list :data="openLevelPassAnimSwitch" :selectcallback="selectResult"></my-switch-list>
+                                    <my-switch-list :open="config.BaseConfig.Anim_LevelPass.isEnable" :data="levelPassAnimList" :selectcallback="selectResult "></my-switch-list>
+                                    <my-switch-list :data="openEveryLevelAnimSwitch" :selectcallback="selectResult"></my-switch-list>
+                                    <my-switch-list :open="config.BaseConfig.Anim_EveryQuestion.isEnable" :data="everyLevelAnimSwitchList" :selectcallback="selectResult "></my-switch-list>
+                                    <my-switch-list :data="openSumupAnimSwitch" :selectcallback="selectResult"></my-switch-list>
+                                    <my-select-list :open="config.BaseConfig.Anim_Sumup" :data="sumupAnimList" :file="fileList" :selectcallback="selectResult"></my-select-list>
+                                </div>
+                                <div v-else>
+                                    <div style="display: flex;">
+                                        <span style="line-height: 28px;">布局:</span>
+                                        <el-radio-group v-model="layOutText" size="mini">
+                                            <el-radio-button v-for="element in layOut" :key='element.key' :label="element.name"></el-radio-button>
+                                        </el-radio-group>
+                                    </div>
+                                    <div style="display: flex; margin-top: 5px;">
+                                        <span style="line-height:30px;">题目:</span>
+                                        <el-input class="myinputText" v-model="currentQuestion.questionContent" placeholder="请输入内容"></el-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+            <div class="dialog ">
+                <el-dialog :title="dialogData.title" :visible.sync="centerDialogVisible" width="30% " center>
+                    <div class="dialogimage">
+                        <img v-if="dialogData.type=='image'" :src="dialogData.url"></image>
+                        <audio v-else-if="dialogData.type=='sound' " :src="dialogData.url " controls='true'></audio>
+                        <p v-else>不支持预览</p>
+                    </div>
+                    <span slot="footer " class="dialog-footer ">
+                        <el-button @click="centerDialogVisible=false ">取 消</el-button>
+                        <el-button type="primary " @click="centerDialogVisible=false ">确 定</el-button>
+                    </span>
+                </el-dialog>
+            </div>
+        </div>
     </div>
-  </div>
-  <!-- 引入 Vue -->
-  <script src="./js/vue.js"></script>
-  <!-- 引入组件库 -->
-  <script src="./js/element-ui.js"></script>
-  <script src="./js/spark-md5.js"></script>
-  <script src="./js/axios.js"></script>
-  <script src="./js/utils.js"></script>
-  <script>
-    // let str = "";
-    // str.substring()
-  </script>
-  <script src="./js/http.js"></script>
-  <script src="./js/md5.js"></script>
-  <script src="./js/upload.js"></script>
-  <script src="./index.js"></script>
+    <script src="./js/Config.js "></script>
+    <!-- 引入 Vue -->
+    <script src="./js/vue.js "></script>
+    <!-- 引入组件库 -->
+    <script src="./js/element-ui.js "></script>
+    <script src="./js/component/InputNumberList.js "></script>
+    <script src="./js/component/SelectList.js "></script>
+    <script src="./js/component/AssetData.js "></script>
+    <script src="./js/component/AssetDataComp.js "></script>
+    <script src="./js/component/SwitchList.js "></script>
+    <script src="./js/spark-md5.js "></script>
+    <script src="./js/axios.js "></script>
+    <script src="./js/utils.js "></script>
+    <script src="./js/http.js "></script>
+    <script src="./js/md5.js "></script>
+    <script src="./js/upload.js "></script>
+    <script src="./index.js "></script>
 </body>
 
 </html>
