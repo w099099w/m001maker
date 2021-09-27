@@ -954,6 +954,7 @@ new Vue({
         changTabs(e) {
             // 第一页为游戏流程配置，所以题库下标减一
             this.tabIndex = e.index;
+            document.getElementById("").scrollTop = 0;
         },
         beforeUpload(type, e) {
             return Utils.verifyFileType(e.name, type);
