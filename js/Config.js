@@ -1,4 +1,7 @@
 class Config {
+    setSelf(self) {
+        this.self = self;
+    }
     constructor() {
         this.BaseConfig = {
             BgSetting: {
@@ -69,6 +72,9 @@ class Config {
             ]
         };
         this.OtherList = {
+            ReadBackButtonEffect: "",
+            animTargetGuidePlane: 0,
+            AnimTargetGuideRes: "",
             spine: {
                 poltAnim: {
                     src: "",
@@ -83,6 +89,25 @@ class Config {
                 sumupAnim: {
                     src: "",
                     audio: ""
+                },
+                replayAnim: {
+                    src: ""
+                },
+                feedBackAnim: {
+                    src: "",
+                    anim: [{
+                            anim: "finish",
+                            voice: ""
+                        },
+                        {
+                            anim: "idle",
+                            voice: ""
+                        },
+                        {
+                            anim: "init",
+                            voice: ""
+                        }
+                    ]
                 },
             },
             QuestionBarImage: "",
@@ -151,5 +176,93 @@ class Question {
         this.index = id;
         this.layoutID = 0;
         this.questionContent = "";
+        this.ScreenShoot = false;
+        this.voiceAndEffPlay = true;
+        this.radomSelectPos = false;
+        this.questionContentColor = {
+            r: 0,
+            g: 0,
+            b: 0
+        };
+        this.questionVoice = {
+            res: "",
+            whenStartPlayVoice: true,
+            playOnLoadClickStop: true
+        };
+        this.questionImage = "";
+        this.voiceTargetGuide = {
+            res: "",
+            clickStop: true
+        };
+        this.selectGuide = [{
+                start: 0,
+                end: 0
+            },
+            {
+                start: 0,
+                end: 0
+            },
+            {
+                start: 0,
+                end: 0
+            }, {
+                start: 0,
+                end: 0
+            }
+        ];
+        this.voiceAnwserRight = [];
+        this.voiceAnwserWrong = [];
+        this.select_Fixed = [];
+        this.repeatThisQuesNum = 0;
+        this.rightAwserID = 0;
+        this.feedBackAnim = {
+            right: {
+                anim: "",
+                voice: ""
+            },
+            wrong: {
+                anim: "",
+                voice: ""
+            },
+            plot: {
+                anim: "",
+                voice: ""
+            }
+        };
+        this.radom_Fixed = {
+            right: [],
+            wrong: []
+        };
+    }
+}
+class Button {
+    constructor(isRight = true) {
+        this.label = "";
+        this.image = "";
+        this.voice = "";
+        this.isRight = isRight;
+    }
+}
+class PageCache {
+    constructor() {
+        this.rightAudio = [];
+        this.wrongAudio = [];
+        this.select_Fixed = [];
+        this.buttonPlane = false;
+        this.selectDataBaseType = "0";
+        this.feedBackAnim = {
+            right: {
+                anim: "",
+                voice: ""
+            },
+            wrong: {
+                anim: "",
+                voice: ""
+            },
+            plot: {
+                anim: "",
+                voice: ""
+            }
+        };
     }
 }

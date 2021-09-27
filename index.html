@@ -28,40 +28,84 @@
                 <img class='quitButton' v-if="previewData.OtherList.Btn_quit" :src="previewData.OtherList.Btn_quit">
                 <div class='questionBar'>
                     <img class='Image' v-if="previewData.OtherList.QuestionBarImage" :src="previewData.OtherList.QuestionBarImage">
-                    <p class='titleText' v-if="currentQuestion.questionContent">{{currentQuestion.questionContent}}</p>
+                    <p class='titleText' v-color="titleColor" v-if="currentQuestion.questionContent">{{currentQuestion.questionContent}}</p>
                 </div>
-
-
                 <img class='questionNumberBg' v-if="previewData.OtherList.QuestionNumBgRes" :src="previewData.OtherList.QuestionNumBgRes">
-
                 <div v-if="editableTabsValue > 1">
                     <div v-if="currentQuestion.layoutID%5==0">
-                        <img class='a101' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
-                        <img class='a102' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
-                        <img class='a103' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
-                        <img class='a104' v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                        <div class="a101">
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        </div>
+                        <div class="a102">
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        </div>
+                        <div class="a103">
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        </div>
+                        <div class="a104">
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[3]" v-text="currentQuestion.select_Fixed[3].label"></p>
+                        </div>
                     </div>
                     <div v-if="currentQuestion.layoutID%5==1">
-                        <img class='a101' v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
-                        <img class='a102' v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
-                        <img class='a203' v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
+                        <div class='a101'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        </div>
+                        <div class='a102'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        </div>
+                        <div class='a203'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        </div>
                     </div>
                     <div v-if="currentQuestion.layoutID%5==2">
-                        <img class='a301' v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
-                        <img class='a302' v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
+                        <div class='a301'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        </div>
+                        <div class='a302'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        </div>
                     </div>
                     <div v-if="currentQuestion.layoutID%5==3">
-                        <img class='a401' v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
-                        <img class='a402' v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
-                        <img class='a403' v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
+                        <div class='a401'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        </div>
+                        <div class='a402'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        </div>
+                        <div class='a403'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        </div>
                     </div>
                     <div v-if="currentQuestion.layoutID%5==4">
-                        <img class='a501' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
-                        <img class='a502' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
-                        <img class='a503' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
-                        <img class='a504' v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                        <div class='a501'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        </div>
+                        <div class='a502'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        </div>
+                        <div class='a503'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        </div>
+                        <div class='a504'>
+                            <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
+                            <p class="buttonLable" v-if="currentQuestion.select_Fixed[3]" v-text="currentQuestion.select_Fixed[3].label"></p>
+                        </div>
                     </div>
-
                 </div>
             </div>
             <div class="list">
@@ -125,11 +169,37 @@
                                         <div class="inlineItem" v-if="config.BaseConfig.Anim_TipRightPlane==0">
                                             <div v-for="(element,key) in config.OtherList.ButtonFlash" :key="key" class="audioList">
                                                 <span class="target">布局A{{key+1}}|B{{key+1}}使用的闪烁图:</span>
-                                                <el-select class="my-el-select" v-model="config.OtherList.ButtonFlash[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.ButtonFlash',key)">
+                                                <el-select class="my-el-select" v-model="ButtonFlash[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.ButtonFlash',key)">
                                                     <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
                                                     </el-option>
                                                 </el-select>
                                             </div>
+                                        </div>
+                                    </el-collapse-transition>
+                                    <el-tooltip placement="top" effect="light">
+                                        <div slot="content">方案为闪烁时请配置正确提示<br/>动画方案为闪烁并选择闪烁文件</div>
+                                        <div class="item">
+                                            <span class="tips">目标引导动画方案:</span>
+                                            <el-select class="my-el-select" v-model="config.OtherList.animTargetGuidePlane" filterable placeholder="请选择" @change="selectResult($event,'bool','OtherList.animTargetGuidePlane')">
+                                                <el-option v-for="citem in rightTipPlane" :key="citem.key" :label="citem.name" :value="citem.key">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                    </el-tooltip>
+                                    <el-collapse-transition>
+                                        <div class="item" v-if="config.OtherList.animTargetGuidePlane==1">
+                                            <span class="tips">目标引导动画资源:</span>
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'particle','OtherList.AnimTargetGuideRes')">
+                                                <el-option v-for="citem in fileList.particle" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <div class="item" v-else-if="config.OtherList.animTargetGuidePlane==2">
+                                            <span class="tips">目标引导动画资源:</span>
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.AnimTargetGuideRes')">
+                                                <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
                                         </div>
                                     </el-collapse-transition>
                                     <div class="item">
@@ -160,7 +230,7 @@
                                             </div>
                                             <div v-for="(element,key) in config.BaseConfig.Anim_Guide.src" :key="key" class="audioList">
                                                 <span class="target">步骤{{key+1}}使用的配音:</span>
-                                                <el-select class="my-el-select" v-model="config.BaseConfig.Anim_Guide.src[key]" filterable placeholder="请选择" @change="selectResult($event,'array','BaseConfig.Anim_Guide.src',key)">
+                                                <el-select class="my-el-select" v-model="Anim_GuideAudio[key]" filterable placeholder="请选择" @change="selectResult($event,'sound','BaseConfig.Anim_Guide.src',key)">
                                                     <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                     </el-option>
                                                 </el-select>
@@ -178,17 +248,220 @@
                                     <my-switch-list :open="config.BaseConfig.Anim_EveryQuestion.isEnable" :data="everyLevelAnimSwitchList" :selectcallback="selectResult "></my-switch-list>
                                     <my-switch-list :data="openSumupAnimSwitch" :selectcallback="selectResult"></my-switch-list>
                                     <my-select-list :open="config.BaseConfig.Anim_Sumup" :data="sumupAnimList" :file="fileList" :selectcallback="selectResult"></my-select-list>
+                                    <div class="button">
+                                        <p style="width: 520px;text-align: center;border-bottom: 1px solid #000;" class="itemText">主反馈动画设置</p>
+                                        <div class="item">
+                                            <span class="tips" style="font-size: 14px; font-weight: 600;">反馈动画资源:</span>
+                                            <el-select class="my-el-select" v-model="feedBackAnim.src" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.spine.feedBackAnim.src')">
+                                                <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                        <el-collapse-transition>
+                                            <div v-if="config.OtherList.spine.feedBackAnim.src">
+                                                <div class="item">
+                                                    <span class="tips" style="font-size: 14px; font-weight: 600;">init动作反馈配音资源:</span>
+                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[2].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.2.voice')">
+                                                        <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                        </el-option>
+                                                    </el-select>
+                                                </div>
+                                                <div class="item">
+                                                    <span class="tips" style="font-size: 14px; font-weight: 600;">idle动作反馈配音资源:</span>
+                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[1].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.1.voice')">
+                                                        <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                        </el-option>
+                                                    </el-select>
+                                                </div>
+                                                <div class="item">
+                                                    <span class="tips" style="font-size: 14px; font-weight: 600;">finish动作反馈配音资源:</span>
+                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[0].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.0.voice')">
+                                                        <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                        </el-option>
+                                                    </el-select>
+                                                </div>
+                                            </div>
+                                        </el-collapse-transition>
+                                    </div>
                                 </div>
                                 <div v-else>
                                     <div style="display: flex;">
-                                        <span style="line-height: 28px;">布局:</span>
+                                        <span class="itemText" style="line-height: 28px;">布局:</span>
                                         <el-radio-group v-model="layOutText" size="mini">
                                             <el-radio-button v-for="element in layOut" :key='element.key' :label="element.name"></el-radio-button>
                                         </el-radio-group>
                                     </div>
-                                    <div style="display: flex; margin-top: 5px;">
-                                        <span style="line-height:30px;">题目:</span>
+                                    <div class="titleSet">
+                                        <span class="itemText" style="line-height:30px;">题目:</span>
                                         <el-input class="myinputText" v-model="currentQuestion.questionContent" placeholder="请输入内容"></el-input>
+                                        <div style="display: flex;width: 112px;justify-content: end;">
+                                            <span style="line-height:30px;">颜色:</span>
+                                            <el-color-picker style="height: 30px;" v-model="titleColor"></el-color-picker>
+                                        </div>
+                                    </div>
+                                    <my-switch-list :question="currentQuestion" :data="scrreenShoot" :selectcallback="selectResultByQuestion"></my-switch-list>
+                                    <my-select-list :question="currentQuestion" :data="questionVoice" :file="fileList" :selectcallback="selectResultByQuestion"></my-select-list>
+                                    <el-collapse-transition>
+                                        <div v-if="currentQuestion.voiceTargetGuide.res">
+                                            <div style="display: flex;margin-top: 3px;" v-for='(element,key,index) in currentQuestion.selectGuide' :key=index>
+                                                <span class="itemText" style="width: 190px;" v-text="'选项'+key+'目标引导时间:'"></span>
+                                                <span class="itemText">开始时间:</span>
+                                                <el-input-number class="myinput" v-model="currentQuestion.selectGuide[key].start" controls-position="right" :step="0.01" :precision="2" :min="0" :max="999"></el-input-number>
+                                                <span class="itemText" style="margin-left: 10px;">终止时间:</span>
+                                                <el-input-number class="myinput" v-model="currentQuestion.selectGuide[key].end" controls-position="right" :step="0.01" :precision="2" :min="0" :max="999"></el-input-number>
+                                            </div>
+                                        </div>
+                                    </el-collapse-transition>
+                                    <div class="item">
+                                        <span class="tips">重复本题次数:</span>
+                                        <el-input-number class="myinput" v-model="currentQuestion.repeatThisQuesNum" controls-position="right" :min="1" :max="999"></el-input-number>
+                                    </div>
+                                    <div class="inlineItem">
+                                        <div class="item">
+                                            <span class="tips">选择正确音效资源数量:</span>
+                                            <el-input-number class="myinput" v-model="rightEffSize" controls-position="right" :min="0" :max="3"></el-input-number>
+                                        </div>
+                                        <div v-for="(element,key) in currentQuestion.voiceAnwserRight" :key="key" class="audioList">
+                                            <span class="target">正确音效{{key+1}}:</span>
+                                            <el-select class="my-el-select" v-model="questionCache.rightAudio[key]" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','voiceAnwserRight',key)">
+                                                <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                    <div class="inlineItem">
+                                        <div class="item">
+                                            <span class="tips">选择错误音效资源数量:</span>
+                                            <el-input-number class="myinput" v-model="wrongEffSize" controls-position="right" :min="0" :max="3"></el-input-number>
+                                        </div>
+                                        <div v-for="(element,key) in currentQuestion.voiceAnwserWrong" :key="key" class="audioList">
+                                            <span class="target">错误音效{{key+1}}:</span>
+                                            <el-select class="my-el-select" v-model="questionCache.wrongAudio[key]" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','voiceAnwserWrong',key)">
+                                                <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                </el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                    <p style="width: 520px;text-align: center;" class="itemText">反馈动画设置:</p>
+                                    <div class="button">
+                                        <div class="feedbackbg" v-for="item in feedBackInQuestion">
+                                            <div style="margin: 10px 10px;">
+                                                <p class="itemText">{{item.key}}:</p>
+                                                <div class="titleSet" style="margin-top: 0px ; display: flex; justify-content: space-between;align-items: center;">
+                                                    <span class="itemText">动作名:<el-input class="myButtonInputText" style="width: 150px;" v-model="currentQuestion.feedBackAnim[item.objectKey].anim" placeholder="请输入内容"></el-input></span>
+                                                    <span class="itemText">
+                                                        动画配音:
+                                                        <el-select class="my-el-select" v-model="questionCache.feedBackAnim[item.objectKey].voice" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','feedBackAnim.'+item.objectKey+'.voice')">
+                                                            <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                            </el-option>
+                                                        </el-select>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <span class="tips">选项配置方案:</span>
+                                        <el-switch v-model="setPlane" active-color="#808080" inactive-color="#808080" active-text="随机" inactive-text="固定">
+                                        </el-switch>
+                                    </div>
+                                    <div class="button">
+                                        <div v-if="setPlane">
+                                            <div class="randomSelect">
+                                                <el-radio-group class="group" v-model="questionCache.selectDataBaseType">
+                                                    <el-radio label="0" border>正确选项库|数量:{{rightBaseSize}}</el-radio>
+                                                    <el-radio label="1" border>错误选项库|数量:{{wrongBaseSize}}</el-radio>
+                                                </el-radio-group>
+                                            </div>
+                                            <div v-if="questionCache.selectDataBaseType==0">
+                                                <div class="item" style="display: flex; justify-content: space-between;">
+                                                    <span class="tips">正确选项库数量:</span>
+                                                    <el-input-number class="myinput" v-model="rightBaseSize" controls-position="right" :min="0" :max="999"></el-input-number>
+                                                </div>
+                                                <div class="bg" v-for="(element,key) in currentQuestion.radom_Fixed.right" :key="key" v-state="element">
+                                                    <div class="content">
+                                                        <p class="itemText">选项{{key+1}}:</p>
+                                                        <div class="titleSet" style="margin-top: 0px;display: flex; align-items: center; justify-content: space-between;">
+                                                            <span class="itemText">选项文字:<el-input class="myButtonInputText" v-model="currentQuestion.radom_Fixed.right[key].label" placeholder="请输入内容"></el-input></span>
+                                                        </div>
+                                                        <div style="margin-top: 5px;display: flex; align-items: center; justify-content: space-between;">
+                                                            <span style="font-size: 14px; font-weight: 600;">
+                                                                选项图片:
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.right[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','radom_Fixed.right.'+key+'.image')">
+                                                                    <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </span>
+                                                            <span style="font-size: 14px; font-weight: 600;">
+                                                                选项配音:
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.right[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','radom_Fixed.right.'+key+'.sound')">
+                                                                    <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div v-else-if="questionCache.selectDataBaseType==1">
+                                                <div class="item" style="display: flex; justify-content: space-between;">
+                                                    <span class="tips">错误选项库数量:</span>
+                                                    <el-input-number class="myinput" v-model="wrongBaseSize" controls-position="right" :min="0" :max="999"></el-input-number>
+                                                </div>
+                                                <div class="bg" v-for="(element,key) in currentQuestion.radom_Fixed.wrong" :key="key" v-state="element">
+                                                    <div class="content">
+                                                        <p class="itemText">选项{{key+1}}:</p>
+                                                        <div class="titleSet" style="margin-top: 0px;display: flex; align-items: center; justify-content: space-between;">
+                                                            <span class="itemText">选项文字:<el-input class="myButtonInputText" v-model="currentQuestion.radom_Fixed.wrong[key].label" placeholder="请输入内容"></el-input></span>
+                                                        </div>
+                                                        <div style="margin-top: 5px;display: flex; align-items: center; justify-content: space-between;">
+                                                            <span style="font-size: 14px; font-weight: 600;">
+                                                                选项图片:
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.wrong[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','radom_Fixed.wrong.'+key+'.image')">
+                                                                    <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </span>
+                                                            <span style="font-size: 14px; font-weight: 600;">
+                                                                选项配音:
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.wrong[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','radom_Fixed.wrong.'+key+'.sound')">
+                                                                    <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                                    </el-option>
+                                                                </el-select>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            <div class="bg" v-for="(element,key) in currentQuestion.select_Fixed" :key="key" v-state="element">
+                                                <div class="content">
+                                                    <p class="itemText">选项{{key+1}}:</p>
+                                                    <div class="titleSet" style="margin-top: 0px;display: flex; align-items: center; justify-content: space-between;">
+                                                        <span class="itemText">选项文字:<el-input class="myButtonInputText" v-model="currentQuestion.select_Fixed[key].label" placeholder="请输入内容"></el-input></span>
+                                                        <el-switch v-model="currentQuestion.select_Fixed[key].isRight" active-color='#13ce66' inactive-color="#ff4949" active-text="正确" inactive-text="错误" @change="selectResultByQuestion($event,'bool','select_Fixed.'+key+'.isRight')">
+                                                        </el-switch>
+                                                    </div>
+                                                    <div style="margin-top: 5px;display: flex; align-items: center; justify-content: space-between;">
+                                                        <span style="font-size: 14px; font-weight: 600;">
+                                                            选项图片:
+                                                            <el-select class="my-el-select" v-model="questionCache.select_Fixed[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','select_Fixed.'+key+'.image')">
+                                                                <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </span>
+                                                        <span style="font-size: 14px; font-weight: 600;">
+                                                            选项配音:
+                                                            <el-select class="my-el-select" v-model="questionCache.select_Fixed[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','select_Fixed.'+key+'.sound')">
+                                                                <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

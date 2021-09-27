@@ -2,12 +2,32 @@ Vue.component('my-switch-list', {
     props: {
         selectcallback: Function,
         data: [],
-        open: undefined
+        open: undefined,
+        question: Object
     },
     data() {
         return {
-            color: "#ff4949"
+            color: "#ff4949",
+            that: this
         };
+    },
+    directives: {
+        'content': {
+            bind(el, binding) {
+                let evarStr = 'binding.value.element.value = binding.value.that.question';
+                binding.value.element.route.split('.').forEach(element => {
+                    evarStr += `["${element}"]`;
+                });
+                eval(evarStr);
+            },
+            update(el, binding) {
+                let evarStr = 'binding.value.that.question';
+                binding.value.element.route.split('.').forEach(element => {
+                    evarStr += `["${element}"]`;
+                });
+                eval(evarStr += '= binding.value.element.value');
+            }
+        }
     },
     watch: {
 
@@ -18,7 +38,18 @@ Vue.component('my-switch-list', {
         // }
     },
     mounted() {
-        //@change="selectcallback($event,'bool',item.route)"
+
+    },
+    computed: {
+        current(a, b) {
+            console.log(a, b);
+            return false;
+        }
+    },
+    method: {
+        send() {
+
+        },
     },
     template: `
     <div>
@@ -28,7 +59,9 @@ Vue.component('my-switch-list', {
                     <div class="item" v-for="element in data">
                         <span class="tips">{{element.key}}</span>
                         <el-tooltip :disabled="!Boolean(element.tip)" :content="element.tip" placement="top" effect="light">
-                            <el-switch v-model="element.value" :active-color="element.activeColor?element.activeColor:'#13ce66'" :inactive-color="element.inactiveColor?element.inactiveColor:'#808080'" :active-text="element.activeStr?element.activeStr:'有'" :inactive-text="element.inactiveStr?element.inactiveStr:'无'" @change="selectcallback($event,'bool',element.route)" >
+                            <el-switch v-if="element.target" v-content="{element,that}" v-model="element.value" :active-color="element.activeColor?element.activeColor:'#13ce66'" :inactive-color="element.inactiveColor?element.inactiveColor:'#808080'" :active-text="element.activeStr?element.activeStr:'有'" :inactive-text="element.inactiveStr?element.inactiveStr:'无'" @change="selectcallback($event,'bool',element.route)" >
+                            </el-switch>
+                            <el-switch v-else v-model="element.value" :active-color="element.activeColor?element.activeColor:'#13ce66'" :inactive-color="element.inactiveColor?element.inactiveColor:'#808080'" :active-text="element.activeStr?element.activeStr:'有'" :inactive-text="element.inactiveStr?element.inactiveStr:'无'" @change="selectcallback($event,'bool',element.route)" >
                             </el-switch>
                         </el-tooltip>
                     </div>
@@ -38,8 +71,10 @@ Vue.component('my-switch-list', {
         <div v-else>
             <div class="item" v-for="element in data">
                 <span class="tips">{{element.key}}</span>
-                <el-tooltip :disabled="!Boolean(element.tip)" :content="element.tip" placement="top" effect="light">
-                    <el-switch v-model="element.value" :active-color="element.activeColor?element.activeColor:'#13ce66'" :inactive-color="element.inactiveColor?element.inactiveColor:'#808080'" :active-text="element.activeStr?element.activeStr:'有'" :inactive-text="element.inactiveStr?element.inactiveStr:'无'" @change="selectcallback($event,'bool',element.route)" >
+                <el-tooltip :disabled="!Boolean(element.tip)" :content="element.tip" placement="top" effect="light">  
+                    <el-switch v-if="element.target" v-content="{element,that}" v-model="element.value" :active-color="element.activeColor?element.activeColor:'#13ce66'" :inactive-color="element.inactiveColor?element.inactiveColor:'#808080'" :active-text="element.activeStr?element.activeStr:'有'" :inactive-text="element.inactiveStr?element.inactiveStr:'无'" @change="selectcallback($event,'bool',element)" >
+                    </el-switch>
+                    <el-switch v-else v-model="element.value" :active-color="element.activeColor?element.activeColor:'#13ce66'" :inactive-color="element.inactiveColor?element.inactiveColor:'#808080'" :active-text="element.activeStr?element.activeStr:'有'" :inactive-text="element.inactiveStr?element.inactiveStr:'无'" @change="selectcallback($event,'bool',element.route)" >
                     </el-switch>
                 </el-tooltip>
             </div>

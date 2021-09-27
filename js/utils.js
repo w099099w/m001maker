@@ -30,7 +30,7 @@ class Utils {
         route = route.split('.');
         let evarStr = 'this';
         route.forEach(element => {
-            evarStr += '.' + element;
+            evarStr += `["${element}"]`;
         });
         if (key != undefined) {
             evarStr += `["${key}"]`;

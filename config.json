@@ -225,7 +225,6 @@
                     "clickStop": true
                 },
                 "voiceAndEffPlay": true,
-                "animTargetGuidePlane": 0,
                 "selectGuide": [],
                 "voiceAnwserRight": [
                     "M001_RIGHT03"
@@ -257,18 +256,6 @@
         ]
     },
     "OtherList": {
-        "rightVoiceBase": [
-            "M001_RIGHT01",
-            "M001_RIGHT02",
-            "M001_RIGHT03",
-            "M001_RIGHT04"
-        ],
-        "wrongVoiceBase": [
-            "M001_WRONG01"
-        ],
-        "Anim_RIGHT_TIP": [
-            "M001_RightTip"
-        ],
         "spine": {
             "poltAnim": {
                 "src": "",
@@ -316,6 +303,7 @@
         "OutTimeVoice": "M001_TIMEOUT_VOICE",
         "QuestionNumBgRes": "",
         "AnimTargetGuideRes": "",
+        "animTargetGuidePlane": 0,
         "Btn_quit": "M001_BTN_QUIT"
     }
 }
