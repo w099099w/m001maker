@@ -109,7 +109,7 @@ class EffectFile {
                     i--;
                 }
             }
-            let data = new FileData(name, realName, file, url);
+            let data = new FileData(name, realName, gameName, resType, file, url);
             data.type = type;
             this.AllFile.push(data);
         }

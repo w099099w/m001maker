@@ -82,6 +82,13 @@ new Vue({
             interactive: {
                 image: {},
                 sound: {},
+                gameConfig: {},
+                spine: {},
+                particle: {}
+            },
+            interactiveFile: {
+                image: {},
+                sound: {},
                 spine: {},
                 particle: {}
             },
@@ -141,7 +148,7 @@ new Vue({
                 {
                     key: "重读按钮动画资源:",
                     value: ConfigData.instance.OtherList.spine.replayAnim.src,
-                    type: 'image',
+                    type: 'spine',
                     route: "OtherList.spine.replayAnim.src",
                 },
                 {
@@ -487,6 +494,15 @@ new Vue({
             iguideSize: "1",
             questionIndex: 0,
             add: 1,
+            remoteAssetDb: "",
+            current: {
+                progress: 0,
+                filename: ""
+            },
+            total: {
+                progress: 0,
+                count: "0/0"
+            },
         };
     },
     directives: {
@@ -519,6 +535,9 @@ new Vue({
         }
     },
     computed: {
+        pre() {
+            return !this.remoteAssetDb;
+        },
         rightBaseSize: {
             get() {
                 return this.currentQuestion.radom_Fixed.right.length;
@@ -732,6 +751,16 @@ new Vue({
                 this.makerInfo.userAccount = requestData.account;
             });
         }
+
+        // this.$notify({
+        //     title: '预览提示',
+        //     dangerouslyUseHTMLString: true,
+        //     message: this.$createElement("div", null, [
+        //         this.$createElement("p", null, "文件准备完成"),
+        //         this.$createElement("p", null, "不支持")
+        //     ]),
+        //     duration: 0
+        // });
     },
     // 方法集合
     methods: {
@@ -758,7 +787,10 @@ new Vue({
                     break;
                 case '3':
                     {
-                        this.fileList.particle = a.GetAllEffect();
+                        let arr = a.GetAllEffect();
+                        this.fileList.particle = arr.map((element) => {
+                            return element.name;
+                        });
                     }
                     break;
             }
@@ -827,7 +859,7 @@ new Vue({
                         uploadMultiple(file.file, type, this.makerInfo, (data) => {
                             Utils.changeObjectByRoute.call(this, route, data, "data.url");
                             this.previewData.bgimage = data.url;
-                        })
+                        });
                     }
             }
         },
@@ -858,13 +890,16 @@ new Vue({
                     {
                         result = this.assetDb.GetSpineByName(e);
                         if (result) {
-                            result = { url: result.Files[0].url, interactiveKey: result.Files[0].interactiveKey }
+                            result = { name: e, url: result.Files[0].url, interactiveKey: result.Files[0].interactiveKey };
                         }
                     }
                     break;
                 case 'particle':
                     {
                         result = this.assetDb.GetEffectByName(e);
+                        if (result) {
+                            result = { name: e, url: result.Files[0].url, interactiveKey: result.Files[0].interactiveKey };
+                        }
                     }
                     break;
             }
@@ -873,9 +908,10 @@ new Vue({
                 this.$message.error("没有该资源数据");
                 return;
             }
+            Utils.changeObjectByRoute.call(this, `interactiveFile.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "config." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "previewData." + route, result, "data.url", key);
-            Utils.changeObjectByRoute.call(this, `interactive.${type}.${result.interactiveKey}`, `Assets/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
+            Utils.changeObjectByRoute.call(this, `interactive.${type}.${result.interactiveKey}`, `Asset/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
         },
         selectResultByQuestion(e, type, route, key) {
             console.log(e, type, route);
@@ -914,20 +950,156 @@ new Vue({
                 this.$message.error("没有该资源数据");
                 return;
             }
+            Utils.changeObjectByRoute.call(this, `interactiveFile.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "currentQuestion." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "currentPriview." + route, result, "data.url", key);
-            Utils.changeObjectByRoute.call(this, `interactive.${type}.${result.interactiveKey}`, `Assets/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
+            Utils.changeObjectByRoute.call(this, `interactive.${type}.${result.interactiveKey}`, `Asset/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
         },
         inputResult(e, route) {
             Utils.changeObjectByRoute.call(this, "config." + route, e, "data");
             Utils.changeObjectByRoute.call(this, "previewData." + route, e, "data");
         },
-        /** 预览 */
-        preview() {
-            console.log(this.config);
+        getFileCount() {
+            let count = 0;
+            for (let key in this.interactiveFile) {
+                let item = this.interactiveFile[key];
+                switch (key) {
+                    case 'sound':
+                    case 'image':
+                        {
+                            for (let ckey in item) {
+                                count++;
+                            }
+
+                        }
+                        break;
+                    case 'spine':
+                        {
+                            for (let ckey in item) {
+                                let citem = item[ckey];
+                                let files = this.assetDb.GetSpineByName(citem).Files;
+                                count += files.length;
+                            }
+                        }
+                        break;
+                    case 'particle':
+                        {
+                            for (let ckey in item) {
+                                let citem = item[ckey];
+                                let files = this.assetDb.GetEffectByName(citem).Files;
+                                count += files.length;
+                            }
+                        }
+                        break;
+                }
+            }
+            return count;
         },
-        /** 导出 */
-        exportConfig() {
+        abortUpload() {
+            this.centerDialogVisible = false;
+            this.current.filename = "";
+            this.current.progress = 0;
+            this.total.count = "0/0";
+            this.total.progress = 0;
+        },
+        /** 预览 */
+        async preview() {
+            if (!this.checkConfig()) return;
+            this.centerDialogVisible = true;
+            this.interactive.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
+            let count = this.getFileCount();
+            let currentUploadId = 0;
+            for (let key in this.interactiveFile) {
+                let item = this.interactiveFile[key];
+                switch (key) {
+                    case 'sound':
+                        {
+                            for (let ckey in item) {
+                                let citem = item[ckey];
+                                let fileData = this.assetDb.GetAudioByName(citem);
+                                this.current.filename = fileData.realName;
+                                await uploadMultiple(fileData.file, 'sound', this.makerInfo, (progress) => {
+                                    this.current.progress = progress;
+                                }, () => {
+                                    console.log(ckey + '上传完成');
+                                    currentUploadId++;
+                                    this.total.count = `${currentUploadId}/${count}`;
+                                    this.total.progress = Math.floor((currentUploadId / count) * 100);
+                                });
+                            }
+                        }
+                        break;
+                    case 'image':
+                        {
+                            for (let ckey in item) {
+                                let citem = item[ckey];
+                                let fileData = this.assetDb.GetIamgeByName(citem);
+                                this.current.filename = fileData.realName;
+                                await uploadMultiple(fileData.file, 'image', this.makerInfo, (progress) => {
+                                    this.current.progress = progress;
+                                }, () => {
+                                    console.log(ckey + '上传完成');
+                                    currentUploadId++;
+                                    this.total.count = `${currentUploadId}/${count}`;
+                                    this.total.progress = Math.floor((currentUploadId / count) * 100);
+                                });
+                            }
+                        }
+                        break;
+                    case 'spine':
+                        {
+                            for (let ckey in item) {
+                                let citem = item[ckey];
+                                let files = this.assetDb.GetSpineByName(citem).Files;
+                                files.forEach(async(ccitem) => {
+                                    let fileData = ccitem;
+                                    this.current.filename = fileData.realName;
+                                    await uploadMultiple(fileData.file, 'spine', this.makerInfo, (progress) => {
+                                        this.current.progress = progress;
+                                    }, () => {
+                                        console.log(ckey + '上传完成');
+                                        currentUploadId++;
+                                        this.total.count = `${currentUploadId}/${count}`;
+                                        this.total.progress = Math.floor((currentUploadId / count) * 100);
+                                    });
+                                })
+                            }
+                        }
+                        break;
+                    case 'particle':
+                        {
+                            for (let ckey in item) {
+                                let citem = item[ckey];
+                                let files = this.assetDb.GetEffectByName(citem).Files;
+                                files.forEach(async(ccitem) => {
+                                    let fileData = ccitem;
+                                    this.current.filename = fileData.realName;
+                                    await uploadMultiple(fileData.file, 'particle', this.makerInfo, (progress) => {
+                                        this.current.progress = progress.toString();
+                                    }, () => {
+                                        console.log(ckey + '上传完成');
+                                        currentUploadId++;
+                                        this.total.count = `${currentUploadId}/${count}`;
+                                        this.total.progress = Math.floor((currentUploadId / count) * 100);
+                                    });
+                                })
+                            }
+                        }
+                        break;
+                }
+            }
+            http.sendConfig({ interactive: { assets: this.interactive }, config: this.config.getData(), makerInfo: this.makerInfo }).then((data) => {
+                this.$message.info(data.data.msg);
+                this.remoteAssetDb = data.data.data.data;
+            }).catch((error) => {
+                this.$message.err(error.msg);
+            });
+        },
+        loadPriview() {
+            this.centerDialogVisible = false;
+            window.open(`http://coolarr.com:8090/m001maker/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
+        },
+        checkConfig() {
             for (let i = 0; i < this.config.BaseConfig.Question_DataBase.length; ++i) {
                 let item = this.config.BaseConfig.Question_DataBase[i][0];
                 let buttonPlane = this.showCache[i].buttonPlane;
@@ -941,11 +1113,16 @@ new Vue({
                     });
                     if (right.length != 1) {
                         this.$message.error(`题库${i+1}有且仅有一个正确选项`);
-                        return;
+                        return false;
                     }
                     item.rightAwserID = rightId; //固定选项计算正确ID
                 }
             }
+            return true;
+        },
+        /** 导出 */
+        exportConfig() {
+            if (!this.checkConfig()) return;
             console.log("配置表对象", this.config);
             console.log("资源加载列表", this.interactive);
             console.log("预览列表", this.previewData);
@@ -954,7 +1131,6 @@ new Vue({
         changTabs(e) {
             // 第一页为游戏流程配置，所以题库下标减一
             this.tabIndex = e.index;
-            document.getElementById("").scrollTop = 0;
         },
         beforeUpload(type, e) {
             return Utils.verifyFileType(e.name, type);

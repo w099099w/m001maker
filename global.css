@@ -504,13 +504,19 @@
   width: 96px;
   height: 54px;
 }
-.dialogimage {
+.dialog .dialogUpProgress {
   display: flex;
   justify-content: center;
+  height: 200px;
 }
-.dialogimage img {
-  max-width: 384px;
-  max-height: 216px;
+.dialog .progress .detal {
+  display: flex;
+  justify-content: space-between;
+}
+.el-notification,
+.right {
+  width: 300px;
+  height: 150px;
 }
 /* transition组件动画 */
 .fade-enter-active,

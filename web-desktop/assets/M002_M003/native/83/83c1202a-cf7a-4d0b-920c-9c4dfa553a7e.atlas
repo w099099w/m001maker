@@ -1,0 +1,13 @@
+
+guide.png
+size: 111,127
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+guide_hand
+  rotate: false
+  xy: 2, 2
+  size: 107, 123
+  orig: 107, 123
+  offset: 0, 0
+  index: -1

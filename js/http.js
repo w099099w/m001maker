@@ -12,13 +12,14 @@ function startLoading() { //使用Element loading-start 方法
 }
 
 function endLoading() { //使用Element loading-close 方法
-    loading.close();
+    if (loading) {
+        loading.close();
+    }
 }
 
 /****** request拦截器 ==> 对请求参数做处理 ******/
 instance.interceptors.request.use(
     config => {
-        startLoading();
         // config.headers.Authorization = "Bearer 4c572b97-4edc-4579-9cfb-29bb2cbf2f3c";
         return config;
     },
@@ -46,13 +47,25 @@ const baseUrl = "http://coolarr.com:1274";
 const http = {
     // 获取用户数据
     login(params) {
+        startLoading();
         return instance.post(`${baseUrl}/Maker/Login`, params);
     },
-    sendFileChunk(params) {
-        return instance.post(`${baseUrl}/Maker/Assets/UpLoadChunk`, params);
+    sendConfig(params) {
+        return instance.post(`${baseUrl}/Maker/Upload/Config`, params);
     },
-    sendFile(params) {
-        return instance.post(`${baseUrl}/Maker/Assets/UpLoadFile`, params);
+    sendFileChunk(params, progress) {
+        return instance.post(`${baseUrl}/Maker/Assets/UpLoadChunk`, params, {
+            onUploadProgress: progressEvent => {
+                progress((progressEvent.loaded / progressEvent.total * 100 | 0))
+            }
+        });
+    },
+    sendFile(params, progress) {
+        return instance.post(`${baseUrl}/Maker/Assets/UpLoadFile`, params, {
+            onUploadProgress: progressEvent => {
+                progress((progressEvent.loaded / progressEvent.total * 100 | 0))
+            }
+        });
     },
     mergeFileChunk(params) {
         return instance.post(`${baseUrl}/Maker/Assets/MergeFileChunk`, params);

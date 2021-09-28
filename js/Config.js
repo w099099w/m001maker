@@ -1,7 +1,4 @@
 class Config {
-    setSelf(self) {
-        this.self = self;
-    }
     constructor() {
         this.BaseConfig = {
             BgSetting: {
@@ -130,6 +127,12 @@ class Config {
                 ""
             ]
         };
+    }
+    getData() {
+        return {
+            BaseConfig: this.BaseConfig,
+            OtherList: this.OtherList
+        }
     }
 }
 class PreviewData extends Config {

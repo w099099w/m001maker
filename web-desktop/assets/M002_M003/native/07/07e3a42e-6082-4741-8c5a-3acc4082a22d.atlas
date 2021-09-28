@@ -1,0 +1,41 @@
+
+option.png
+size: 888,782
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bomb
+  rotate: false
+  xy: 2, 234
+  size: 561, 546
+  orig: 585, 575
+  offset: 10, 16
+  index: -1
+happy
+  rotate: false
+  xy: 565, 522
+  size: 321, 258
+  orig: 321, 258
+  offset: 0, 0
+  index: -1
+light
+  rotate: false
+  xy: 2, 24
+  size: 448, 208
+  orig: 598, 304
+  offset: 75, 96
+  index: -1
+normal
+  rotate: false
+  xy: 565, 262
+  size: 321, 258
+  orig: 321, 258
+  offset: 0, 0
+  index: -1
+sad
+  rotate: false
+  xy: 565, 2
+  size: 321, 258
+  orig: 321, 258
+  offset: 0, 0
+  index: -1
