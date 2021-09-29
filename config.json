@@ -304,6 +304,7 @@
         "QuestionNumBgRes": "",
         "AnimTargetGuideRes": "",
         "animTargetGuidePlane": 0,
-        "Btn_quit": "M001_BTN_QUIT"
+        "Btn_quit": "M001_BTN_QUIT",
+        "Btn_quitAudio": ""
     }
 }

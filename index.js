@@ -134,6 +134,12 @@ new Vue({
                     route: "OtherList.Btn_quit",
                 },
                 {
+                    key: "退出按钮点击音效:",
+                    value: ConfigData.instance.OtherList.Btn_quitAudio,
+                    type: "sound",
+                    route: "OtherList.Btn_quitAudio",
+                },
+                {
                     key: "题目框图片:",
                     value: ConfigData.instance.OtherList.QuestionBarImage,
                     type: 'image',

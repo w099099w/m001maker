@@ -111,6 +111,7 @@ class Config {
             BGM: "",
             QuestionNumBgRes: "",
             Btn_quit: "",
+            Btn_quitAudio: "",
             OutTimeVoice: "",
             Button: [
                 "",
