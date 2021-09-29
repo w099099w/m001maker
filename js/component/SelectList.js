@@ -58,7 +58,7 @@ Vue.component('my-select-list', {
                     <div class="item" v-for="item in data">
                         <span class="tips">{{item.key}}</span>
                         <el-tooltip :disabled="!Boolean(item.tip)" :content="item.tip" placement="top" effect="light">
-                            <el-select class="my-el-select" v-if="item.target" v-content="{element:item,that}" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)">
+                            <el-select class="my-el-select" v-if="item.target" v-content="{element:item,that}" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)" clearable>
                                 <div v-if="item.type=='image'">
                                     <el-option v-for="citem in file.image" :key="citem" :label="citem" :value="citem">
                                     </el-option>
@@ -76,7 +76,7 @@ Vue.component('my-select-list', {
                                     </el-option>
                                 </div>
                             </el-select>    
-                            <el-select v-else class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)">
+                            <el-select v-else class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)" clearable>
                                 <div v-if="item.type=='image'">
                                     <el-option v-for="citem in file.image" :key="citem" :label="citem" :value="citem">
                                     </el-option>
@@ -103,7 +103,7 @@ Vue.component('my-select-list', {
             <div class="item" v-for="item in data">
                 <span class="tips">{{item.key}}</span>
                 <el-tooltip :disabled="!Boolean(item.tip)" :content="item.tip" placement="top" effect="light">
-                    <el-select class="my-el-select" v-if="item.target" v-content="{element:item,that}" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)">
+                    <el-select class="my-el-select" v-if="item.target" v-content="{element:item,that}" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)" clearable>
                         <div v-if="item.type=='image'">
                             <el-option v-for="citem in file.image" :key="citem" :label="citem" :value="citem">
                             </el-option>
@@ -121,7 +121,7 @@ Vue.component('my-select-list', {
                             </el-option>
                         </div>
                     </el-select>
-                    <el-select v-else class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)">
+                    <el-select v-else class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectcallback($event,item.type,item.route)" clearable>
                         <div v-if="item.type=='image'">
                             <el-option v-for="citem in file.image" :key="citem" :label="citem" :value="citem">
                             </el-option>

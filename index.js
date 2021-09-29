@@ -909,11 +909,16 @@ new Vue({
                     }
                     break;
             }
-
+            if (e == "") {
+                Utils.changeObjectByRoute.call(this, "config." + route, "", "data", key);
+                Utils.changeObjectByRoute.call(this, "previewData." + route, "", "data", key);
+                return;
+            }
             if (!result) {
                 this.$message.error("没有该资源数据");
                 return;
             }
+
             Utils.changeObjectByRoute.call(this, `interactiveFile.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "config." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "previewData." + route, result, "data.url", key);
@@ -951,6 +956,11 @@ new Vue({
                         result = this.assetDb.GetEffectByName(e);
                     }
                     break;
+            }
+            if (e == "") {
+                Utils.changeObjectByRoute.call(this, "currentQuestion." + route, "", "data", key);
+                Utils.changeObjectByRoute.call(this, "currentPriview." + route, "", "data", key);
+                return;
             }
             if (!result) {
                 this.$message.error("没有该资源数据");

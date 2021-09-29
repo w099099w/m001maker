@@ -153,7 +153,7 @@
                                     <div class="inlineItem">
                                         <div v-for="(element,key) in config.OtherList.Button" :key="key" class="audioList">
                                             <span class="target">布局A{{key+1}}|B{{key+1}}使用的按钮图:</span>
-                                            <el-select class="my-el-select" v-model="Button[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.Button',key)">
+                                            <el-select class="my-el-select" v-model="Button[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.Button',key)" clearable>
                                                 <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
                                                 </el-option>
                                             </el-select>
@@ -169,14 +169,14 @@
                                     <el-collapse-transition>
                                         <div class="item" v-if="config.BaseConfig.Anim_TipRightPlane==1">
                                             <span class="tips">正确提示动画资源:</span>
-                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'particle','BaseConfig.Anim_TipRightRes')">
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'particle','BaseConfig.Anim_TipRightRes')" clearable>
                                                 <el-option v-for="citem in fileList.particle" :key="citem" :label="citem" :value="citem">
                                                 </el-option>
                                             </el-select>
                                         </div>
                                         <div class="item" v-else-if="config.BaseConfig.Anim_TipRightPlane==2">
                                             <span class="tips">正确提示动画资源:</span>
-                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'spine','BaseConfig.Anim_TipRightRes')">
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'spine','BaseConfig.Anim_TipRightRes')" clearable>
                                                 <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
                                                 </el-option>
                                             </el-select>
@@ -186,7 +186,7 @@
                                         <div class="inlineItem" v-if="config.BaseConfig.Anim_TipRightPlane==0">
                                             <div v-for="(element,key) in config.OtherList.ButtonFlash" :key="key" class="audioList">
                                                 <span class="target">布局A{{key+1}}|B{{key+1}}使用的闪烁图:</span>
-                                                <el-select class="my-el-select" v-model="ButtonFlash[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.ButtonFlash',key)">
+                                                <el-select class="my-el-select" v-model="ButtonFlash[key]" filterable placeholder="请选择" @change="selectResult($event,'image','OtherList.ButtonFlash',key)" clearable>
                                                     <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
                                                     </el-option>
                                                 </el-select>
@@ -208,14 +208,14 @@
                                     <el-collapse-transition>
                                         <div class="item" v-if="config.OtherList.animTargetGuidePlane==1">
                                             <span class="tips">目标引导动画资源:</span>
-                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'particle','OtherList.AnimTargetGuideRes')">
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'particle','OtherList.AnimTargetGuideRes')" clearable>
                                                 <el-option v-for="citem in fileList.particle" :key="citem" :label="citem" :value="citem">
                                                 </el-option>
                                             </el-select>
                                         </div>
                                         <div class="item" v-else-if="config.OtherList.animTargetGuidePlane==2">
                                             <span class="tips">目标引导动画资源:</span>
-                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.AnimTargetGuideRes')">
+                                            <el-select class="my-el-select" v-model="item.value" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.AnimTargetGuideRes')" clearable>
                                                 <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
                                                 </el-option>
                                             </el-select>
@@ -280,21 +280,21 @@
                                             <div v-if="config.OtherList.spine.feedBackAnim.src">
                                                 <div class="item">
                                                     <span class="tips" style="font-size: 14px; font-weight: 600;">init动作反馈配音资源:</span>
-                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[2].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.2.voice')">
+                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[2].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.2.voice')" clearable>
                                                         <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                         </el-option>
                                                     </el-select>
                                                 </div>
                                                 <div class="item">
                                                     <span class="tips" style="font-size: 14px; font-weight: 600;">idle动作反馈配音资源:</span>
-                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[1].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.1.voice')">
+                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[1].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.1.voice')" clearable>
                                                         <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                         </el-option>
                                                     </el-select>
                                                 </div>
                                                 <div class="item">
                                                     <span class="tips" style="font-size: 14px; font-weight: 600;">finish动作反馈配音资源:</span>
-                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[0].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.0.voice')">
+                                                    <el-select class="my-el-select" v-model="feedBackAnim.anim[0].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.0.voice')" clearable>
                                                         <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                         </el-option>
                                                     </el-select>
@@ -406,14 +406,14 @@
                                                         <div style="margin-top: 5px;display: flex; align-items: center; justify-content: space-between;">
                                                             <span style="font-size: 14px; font-weight: 600;">
                                                                 选项图片:
-                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.right[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','radom_Fixed.right.'+key+'.image')">
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.right[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','radom_Fixed.right.'+key+'.image')" clearable>
                                                                     <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
                                                                     </el-option>
                                                                 </el-select>
                                                             </span>
                                                             <span style="font-size: 14px; font-weight: 600;">
                                                                 选项配音:
-                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.right[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','radom_Fixed.right.'+key+'.sound')">
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.right[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','radom_Fixed.right.'+key+'.sound')" clearable>
                                                                     <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                                     </el-option>
                                                                 </el-select>
@@ -436,14 +436,14 @@
                                                         <div style="margin-top: 5px;display: flex; align-items: center; justify-content: space-between;">
                                                             <span style="font-size: 14px; font-weight: 600;">
                                                                 选项图片:
-                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.wrong[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','radom_Fixed.wrong.'+key+'.image')">
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.wrong[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','radom_Fixed.wrong.'+key+'.image')" clearable>
                                                                     <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
                                                                     </el-option>
                                                                 </el-select>
                                                             </span>
                                                             <span style="font-size: 14px; font-weight: 600;">
                                                                 选项配音:
-                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.wrong[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','radom_Fixed.wrong.'+key+'.sound')">
+                                                                <el-select class="my-el-select" v-model="questionCache.radom_Fixed.wrong[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','radom_Fixed.wrong.'+key+'.sound')" clearable>
                                                                     <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                                     </el-option>
                                                                 </el-select>
@@ -465,14 +465,14 @@
                                                     <div style="margin-top: 5px;display: flex; align-items: center; justify-content: space-between;">
                                                         <span style="font-size: 14px; font-weight: 600;">
                                                             选项图片:
-                                                            <el-select class="my-el-select" v-model="questionCache.select_Fixed[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','select_Fixed.'+key+'.image')">
+                                                            <el-select class="my-el-select" v-model="questionCache.select_Fixed[key].image" filterable placeholder="请选择" @change="selectResultByQuestion($event,'image','select_Fixed.'+key+'.image')" clearable>
                                                                 <el-option v-for="citem in fileList.image" :key="citem" :label="citem" :value="citem">
                                                                 </el-option>
                                                             </el-select>
                                                         </span>
                                                         <span style="font-size: 14px; font-weight: 600;">
                                                             选项配音:
-                                                            <el-select class="my-el-select" v-model="questionCache.select_Fixed[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','select_Fixed.'+key+'.sound')">
+                                                            <el-select class="my-el-select" v-model="questionCache.select_Fixed[key].sound" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','select_Fixed.'+key+'.sound')" clearable>
                                                                 <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                                 </el-option>
                                                             </el-select>
