@@ -495,6 +495,7 @@ new Vue({
                     route: "questionImage"
                 }
             ],
+            upLoading: true,
             showPage: true,
             iassetDb: "1",
             iguideSize: "1",
@@ -748,6 +749,7 @@ new Vue({
     // 页面加载完成
     mounted() {
         this.setPlane = false;
+        this.centerDialogVisible = true;
         if (localStorage.getItem("userAccount")) {
             this.makerInfo.userAccount = localStorage.getItem("userAccount");
         } else {
@@ -800,13 +802,6 @@ new Vue({
                     }
                     break;
             }
-            // this.dialogData = {
-            //     title: e.type == 'sound' ? '音频资源预览' : '图片资源预览',
-            //     type: e.type,
-            //     url: e.url
-            // };
-            // this.centerDialogVisible = true;
-            console.log(this.fileList);
         },
         handleRemove(e) {},
         switchTabs(newPage, oldPage) {
@@ -1012,6 +1007,7 @@ new Vue({
             return count;
         },
         abortUpload() {
+            this.upLoading = false;
             this.centerDialogVisible = false;
             this.current.filename = "";
             this.current.progress = 0;
@@ -1021,6 +1017,7 @@ new Vue({
         /** 预览 */
         async preview() {
             if (!this.checkConfig()) return;
+            this.upLoading = true;
             this.centerDialogVisible = true;
             this.interactive.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
             let count = this.getFileCount();
@@ -1034,6 +1031,9 @@ new Vue({
                                 let citem = item[ckey];
                                 let fileData = this.assetDb.GetAudioByName(citem);
                                 this.current.filename = fileData.realName;
+                                if (!this.upLoading) {
+                                    return;
+                                }
                                 await uploadMultiple(fileData.file, 'sound', this.makerInfo, (progress) => {
                                     this.current.progress = progress;
                                 }, () => {
@@ -1051,6 +1051,9 @@ new Vue({
                                 let citem = item[ckey];
                                 let fileData = this.assetDb.GetIamgeByName(citem);
                                 this.current.filename = fileData.realName;
+                                if (!this.upLoading) {
+                                    return;
+                                }
                                 await uploadMultiple(fileData.file, 'image', this.makerInfo, (progress) => {
                                     this.current.progress = progress;
                                 }, () => {
@@ -1070,6 +1073,9 @@ new Vue({
                                 files.forEach(async(ccitem) => {
                                     let fileData = ccitem;
                                     this.current.filename = fileData.realName;
+                                    if (!this.upLoading) {
+                                        return;
+                                    }
                                     await uploadMultiple(fileData.file, 'spine', this.makerInfo, (progress) => {
                                         this.current.progress = progress;
                                     }, () => {
@@ -1090,6 +1096,9 @@ new Vue({
                                 files.forEach(async(ccitem) => {
                                     let fileData = ccitem;
                                     this.current.filename = fileData.realName;
+                                    if (!this.upLoading) {
+                                        return;
+                                    }
                                     await uploadMultiple(fileData.file, 'particle', this.makerInfo, (progress) => {
                                         this.current.progress = progress.toString();
                                     }, () => {
@@ -1104,7 +1113,13 @@ new Vue({
                         break;
                 }
             }
+            if (!this.upLoading) {
+                return;
+            }
             http.sendConfig({ interactive: { assets: this.interactive }, config: this.config.getData(), makerInfo: this.makerInfo }).then((data) => {
+                if (!this.upLoading) {
+                    return;
+                }
                 this.$message.info(data.data.msg);
                 this.remoteAssetDb = data.data.data.data;
             }).catch((error) => {
