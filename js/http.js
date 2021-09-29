@@ -60,6 +60,9 @@ const http = {
             }
         });
     },
+    downLoadAsset(params) {
+        return instance.post(`${baseUrl}/Maker/DownloadAsset`, params);
+    },
     sendFile(params, progress) {
         return instance.post(`${baseUrl}/Maker/Assets/UpLoadFile`, params, {
             onUploadProgress: progressEvent => {

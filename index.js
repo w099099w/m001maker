@@ -749,7 +749,7 @@ new Vue({
     // 页面加载完成
     mounted() {
         this.setPlane = false;
-        this.centerDialogVisible = true;
+        //this.centerDialogVisible = true;
         if (localStorage.getItem("userAccount")) {
             this.makerInfo.userAccount = localStorage.getItem("userAccount");
         } else {
@@ -759,16 +759,6 @@ new Vue({
                 this.makerInfo.userAccount = requestData.account;
             });
         }
-
-        // this.$notify({
-        //     title: '预览提示',
-        //     dangerouslyUseHTMLString: true,
-        //     message: this.$createElement("div", null, [
-        //         this.$createElement("p", null, "文件准备完成"),
-        //         this.$createElement("p", null, "不支持")
-        //     ]),
-        //     duration: 0
-        // });
     },
     // 方法集合
     methods: {
@@ -1157,6 +1147,11 @@ new Vue({
             console.log("配置表对象", this.config);
             console.log("资源加载列表", this.interactive);
             console.log("预览列表", this.previewData);
+            http.downLoadAsset({ makerInfo: this.makerInfo }).then((data) => {
+                window.open(data.data.data.data);
+            }).catch((error) => {
+                this.$message.info(error.data.msg);
+            });
         },
         // 切换题库
         changTabs(e) {
