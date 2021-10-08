@@ -1,49 +1,48 @@
-// 创建axios实例
-const instance = axios.create({ timeout: 1000 * 12 });
+class Http {
+    constructor(Url) {
+        Http.baseUrl = Url;
+        Http.instance = axios.create({ timeout: 1000 * 12 });
+        Http.instance.interceptors.request.use(
+            config => {
+                // config.headers.Authorization = "Bearer 4c572b97-4edc-4579-9cfb-29bb2cbf2f3c";
+                return config;
+            },
+            err => {
+                return Promise.reject(err);
+            }
+        );
+        /****** response拦截器 ==> 对响应做处理 ******/
+        Http.instance.interceptors.response.use(
+            response => { //成功请求到数据
+                Loading.hide();
+                if (response.data.code === 400 || response.data.code === 401) { //未经授权时，统一处理
 
-let loading;
-
-function startLoading() { //使用Element loading-start 方法
-    loading = ELEMENT.Loading.service({
-        lock: true,
-        text: '加载中……',
-        background: 'rgba(0, 0, 0, 0.7)'
-    });
-}
-
-function endLoading() { //使用Element loading-close 方法
-    if (loading) {
-        loading.close();
+                }
+                console.log("response", response.data);
+                return response.data;
+            },
+            error => { //响应错误处理
+                Loading.hide();
+                console.log("responseErr", error);
+                return Promise.reject(error);
+            }
+        );
     }
-}
-
-/****** request拦截器 ==> 对请求参数做处理 ******/
-instance.interceptors.request.use(
-    config => {
-        // config.headers.Authorization = "Bearer 4c572b97-4edc-4579-9cfb-29bb2cbf2f3c";
-        return config;
-    },
-    err => {
-        return Promise.reject(err);
-    }
-);
-/****** response拦截器 ==> 对响应做处理 ******/
-instance.interceptors.response.use(
-    response => { //成功请求到数据
-        endLoading();
-        if (response.data.code === 400 || response.data.code === 401) { //未经授权时，统一处理
-
+    static Request(method, route, params, isLoadind) {
+        if (!Http.instance) {
+            this.$message.error("请先创建对象");
         }
-        return response.data;
-    },
-    error => { //响应错误处理
-        endLoading();
-        return Promise.reject(error)
+        if (isLoadind) {
+            Loading.show();
+        }
+        switch (method.toLocaleUpperCase()) {
+            case "POST":
+                return instance.post(`${Http.baseUrl}${route}`, params);
+        }
     }
-)
-
+}
+let instance = axios.create({ timeout: 1000 * 12 });
 const baseUrl = "http://coolarr.com:1274";
-
 const http = {
     // 获取用户数据
     login(params) {

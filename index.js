@@ -748,6 +748,7 @@ new Vue({
     },
     // 页面加载完成
     mounted() {
+        new Http("http://10.0.30.117:10999");
         this.setPlane = false;
         //this.centerDialogVisible = true;
         if (localStorage.getItem("userAccount")) {
@@ -1157,6 +1158,7 @@ new Vue({
         changTabs(e) {
             // 第一页为游戏流程配置，所以题库下标减一
             this.tabIndex = e.index;
+            document.querySelector(".el-tabs__content").scrollTop = 0;
         },
         beforeUpload(type, e) {
             return Utils.verifyFileType(e.name, type);
@@ -1171,6 +1173,7 @@ new Vue({
             this.config.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
             this.tabIndex = `${this.maxTabIndex - 1}`;
             this.setPlane = false;
+            document.querySelector(".el-tabs__content").scrollTop = 0;
         },
         removeTab() {
             if (this.maxTabIndex === 3) {
