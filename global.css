@@ -57,7 +57,7 @@
     left: 53%;
     opacity: 100%;
   }
-  80% {
+  90% {
     opacity: 0%;
   }
   100% {
@@ -69,10 +69,10 @@
   margin-top: 7px;
 }
 .load div {
-  background-color: aqua;
-  border-radius: 6px;
-  width: 6px;
-  height: 6px;
+  background-color: #409eff;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
 }
 .load .dot1 {
   position: absolute;
@@ -584,6 +584,9 @@
   display: flex;
   justify-content: center;
   height: 200px;
+}
+.dialog .progress {
+  margin-top: 10px;
 }
 .dialog .progress .detal {
   display: flex;
