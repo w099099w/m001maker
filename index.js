@@ -116,7 +116,7 @@ new Vue({
             questionVoice: MakerList.questionVoice,
             upLoading: true,
             showPage: true,
-            iassetDb: "1",
+            assetDb: null,
             iguideSize: "1",
             questionIndex: 0,
             add: 1,
@@ -205,18 +205,9 @@ new Vue({
             },
             set(value) {
                 if (value) {
-                    this.currentPriview.radom_Fixed = {
-                        right: [],
-                        wrong: []
-                    };
-                    this.currentQuestion.radom_Fixed = {
-                        right: [],
-                        wrong: []
-                    };
-                    this.questionCache.radom_Fixed = {
-                        right: [],
-                        wrong: []
-                    };
+                    this.currentPriview.radom_Fixed = new RadomSelect();
+                    this.currentQuestion.radom_Fixed = new RadomSelect();
+                    this.questionCache.radom_Fixed = new RadomSelect();
                     this.currentQuestion.select_Fixed = [];
                     this.currentPriview.select_Fixed = [];
                 } else {
@@ -231,11 +222,8 @@ new Vue({
                         this.currentPriview.select_Fixed.splice(this.buttonNum[this.currentQuestion.layoutID % 5], this.currentPriview.select_Fixed.length - this.buttonNum[this.currentQuestion.layoutID % 5]);
                         this.questionCache.select_Fixed.splice(this.buttonNum[this.currentQuestion.layoutID % 5], this.questionCache.select_Fixed.length - this.buttonNum[this.currentQuestion.layoutID % 5]);
                     }
-
-                    this.currentPriview.radom_Fixed = this.currentQuestion.radom_Fixed = {
-                        right: [],
-                        wrong: []
-                    };
+                    this.currentPriview.radom_Fixed = new RadomSelect();
+                    this.currentQuestion.radom_Fixed = new RadomSelect();
                 }
                 this.showCache[this.questionIndex].buttonPlane = value;
             }
@@ -249,14 +237,6 @@ new Vue({
                     this.questionIndex = value - 2;
                 }
                 this.editableTabsValue = value;
-            }
-        },
-        assetDb: {
-            get() {
-                return this.iassetDb;
-            },
-            set(value) {
-                this.iassetDb = value;
             }
         },
         guideSize: {
@@ -382,8 +362,8 @@ new Vue({
     },
     // 方法集合
     methods: {
-        handlePreview(e, a) {
-            this.assetDb = a;
+        handlePreview(e, assetDb) {
+            this.assetDb = assetDb;
             switch (e) {
                 case '0':
                     {
@@ -511,9 +491,24 @@ new Vue({
             }
             return count;
         },
+        dotShow() {
+            let load = document.querySelector(".load");
+            for (let i = 0; i < load.children.length; ++i) {
+                load.children[i].style.animationPlayState = "running";
+                load.children[i].style.display = 'inline';
+            }
+        },
+        dotHide() {
+            let load = document.querySelector(".load");
+            for (let i = 0; i < load.children.length; ++i) {
+                load.children[i].style.animationPlayState = "paused";
+                load.children[i].style.display = 'none';
+            }
+        },
         abortUpload() {
             this.upLoading = false;
             this.centerDialogVisible = false;
+            this.dotHide();
             this.current.filename = "";
             this.current.progress = 0;
             this.total.count = "0/0";
@@ -522,10 +517,15 @@ new Vue({
         /** 预览 */
         async preview() {
             if (!this.checkConfig()) return;
+            this.dotShow();
             this.upLoading = true;
             this.centerDialogVisible = true;
             this.interactive.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
             let count = this.getFileCount();
+            let load = document.querySelector(".load");
+            for (let i = 0; i < load.children.length; ++i) {
+                load.children[i].style.animationPlayState = "running";
+            }
             if (count != 0) {
                 let currentUploadId = 0;
                 for (let key in this.interactiveFile) {
@@ -579,13 +579,15 @@ new Vue({
                 }
             }
             http.sendConfig({ interactive: { assets: this.interactive }, config: this.config.getData(), makerInfo: this.makerInfo }).then((data) => {
+                this.dotHide();
                 if (!this.upLoading) {
                     return;
                 }
                 this.$message.info(data.data.msg);
                 this.remoteAssetDb = data.data.data.data;
             }).catch((error) => {
-                this.$message.err(error.msg);
+                this.$message.error(error.msg);
+                this.dotHide();
             });
         },
         loadPriview() {

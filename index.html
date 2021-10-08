@@ -504,6 +504,13 @@
                     </div>
                     <el-progress :text-inside="true" :stroke-width="16" :percentage="total.progress"></el-progress>
                 </div>
+                <div class="load">
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                    <div class="dot3"></div>
+                    <div class="dot4"></div>
+                    <div class="dot5"></div>
+                </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="abortUpload">终止</el-button>
                     <el-button :disabled="pre" @click="loadPriview">预览</el-button>

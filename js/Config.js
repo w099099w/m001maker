@@ -270,3 +270,9 @@ class PageCache {
         };
     }
 }
+class RadomSelect {
+    constructor() {
+        this.right = [];
+        this.wrong = [];
+    }
+}
