@@ -367,17 +367,17 @@ new Vue({
             switch (e) {
                 case '0':
                     {
-                        this.fileList.image = a.GetAllIamge();
+                        this.fileList.image = assetDb.GetAllIamge();
                     }
                     break;
                 case '1':
                     {
-                        this.fileList.sound = a.GetAllAudio();
+                        this.fileList.sound = assetDb.GetAllAudio();
                     }
                     break;
                 case '2':
                     {
-                        let arr = a.GetAllSpine();
+                        let arr = assetDb.GetAllSpine();
                         this.fileList.spine = arr.map((element) => {
                             return element.name;
                         });
@@ -385,7 +385,7 @@ new Vue({
                     break;
                 case '3':
                     {
-                        let arr = a.GetAllEffect();
+                        let arr = assetDb.GetAllEffect();
                         this.fileList.particle = arr.map((element) => {
                             return element.name;
                         });
@@ -399,7 +399,7 @@ new Vue({
         pageHidden() {
             this.showPage = true;
         },
-        getResultFile(type) {
+        getResultFile(type, e) {
             let result = null;
             switch (type) {
                 case 'image':
@@ -437,7 +437,7 @@ new Vue({
                 Utils.changeObjectByRoute.call(this, "previewData." + route, "", "data", key);
                 return;
             }
-            let result = this.getResultFile(type);
+            let result = this.getResultFile(type, e);
             Utils.changeObjectByRoute.call(this, `interactiveFile.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "config." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "previewData." + route, result, "data.url", key);
@@ -454,7 +454,7 @@ new Vue({
                 Utils.changeObjectByRoute.call(this, "currentPriview." + route, "", "data", key);
                 return;
             }
-            let result = this.getResultFile(type);
+            let result = this.getResultFile(type, e);
             Utils.changeObjectByRoute.call(this, `interactiveFile.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "currentQuestion." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "currentPriview." + route, result, "data.url", key);
@@ -493,6 +493,7 @@ new Vue({
         },
         dotShow() {
             let load = document.querySelector(".load");
+            if (!load) return;
             for (let i = 0; i < load.children.length; ++i) {
                 load.children[i].style.animationPlayState = "running";
                 load.children[i].style.display = 'inline';
@@ -522,10 +523,6 @@ new Vue({
             this.centerDialogVisible = true;
             this.interactive.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
             let count = this.getFileCount();
-            let load = document.querySelector(".load");
-            for (let i = 0; i < load.children.length; ++i) {
-                load.children[i].style.animationPlayState = "running";
-            }
             if (count != 0) {
                 let currentUploadId = 0;
                 for (let key in this.interactiveFile) {
