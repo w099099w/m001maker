@@ -58,7 +58,7 @@ class Utils {
             if (url) {
                 return true;
             }
-        })
+        });
         return url;
     }
 }

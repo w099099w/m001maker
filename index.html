@@ -14,7 +14,6 @@
 <body style="overflow: hidden;">
 
     <div id="app" v-cloak>
-
         <div class="container">
             <div style="height: 80px;"></div>
             <div class="header">
@@ -489,35 +488,48 @@
                 </el-tabs>
             </div>
 
-            <el-dialog class="dialog" @close="abortUpload" width="600px" :title="dialogData.title" :visible.sync="centerDialogVisible" width="30% " center>
-                <div class="progress">
-                    <div class="detal">
-                        <p>当前文件:</p>
-                        <p>{{current.filename}}</p>
+            <el-dialog class="dialog" :close-on-click-modal="false" @close="abortUpload" width="600px" :title="dialogData.title" :visible.sync="centerDialogVisible" width="30% " center>
+                <div v-if="!login.show">
+                    <div class="progress">
+                        <div class="detal">
+                            <p>当前文件:</p>
+                            <p>{{current.filename}}</p>
+                        </div>
+                        <el-progress :text-inside="true" :stroke-width="16" :percentage="current.progress"></el-progress>
                     </div>
-                    <el-progress :text-inside="true" :stroke-width="16" :percentage="current.progress"></el-progress>
-                </div>
-                <div class="progress">
-                    <div class="detal">
-                        <p>总文件:</p>
-                        <p>{{total.count}}</p>
+                    <div class="progress">
+                        <div class="detal">
+                            <p>总文件:</p>
+                            <p>{{total.count}}</p>
+                        </div>
+                        <el-progress :text-inside="true" :stroke-width="16" :percentage="total.progress"></el-progress>
                     </div>
-                    <el-progress :text-inside="true" :stroke-width="16" :percentage="total.progress"></el-progress>
+                    <div class="load">
+                        <div class="dot1"></div>
+                        <div class="dot2"></div>
+                        <div class="dot3"></div>
+                        <div class="dot4"></div>
+                        <div class="dot5"></div>
+                    </div>
                 </div>
-                <div class="load">
-                    <div class="dot1"></div>
-                    <div class="dot2"></div>
-                    <div class="dot3"></div>
-                    <div class="dot4"></div>
-                    <div class="dot5"></div>
+                <div v-else class="login">
+                    <div class="load">
+                        <div class="dot1"></div>
+                        <div class="dot2"></div>
+                        <div class="dot3"></div>
+                        <div class="dot4"></div>
+                        <div class="dot5"></div>
+                        <p>{{login.str}}</p>
+                    </div>
                 </div>
-                <span slot="footer" class="dialog-footer">
+                <span v-if="!login.show" slot="footer" class="dialog-footer">
                     <el-button @click="abortUpload">终止</el-button>
                     <el-button :disabled="pre" @click="loadPriview">预览</el-button>
                 </span>
             </el-dialog>
         </div>
     </div>
+    <script src="./js/User.js"></script>
     <script src="./js/MakerList.js"></script>
     <script src="./js/Config.js "></script>
     <script src="./js/component/Loading.js"></script>

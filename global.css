@@ -50,11 +50,11 @@
     opacity: 100%;
   }
   40% {
-    left: 53%;
+    left: 52.5%;
     opacity: 100%;
   }
   60% {
-    left: 53%;
+    left: 52.5%;
     opacity: 100%;
   }
   90% {
@@ -65,8 +65,19 @@
     opacity: 0%;
   }
 }
+.login {
+  height: 60px;
+}
 .load {
   margin-top: 7px;
+}
+.load p {
+  position: relative;
+  top: 10px;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
 }
 .load div {
   background-color: #409eff;

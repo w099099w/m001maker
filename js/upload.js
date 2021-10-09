@@ -62,19 +62,34 @@ function uploadMultiple(file, type, makerInfo, progress, callback) {
                 }
             } else {
                 let formData_upload = new FormData(); //上传参数
-                console.log(file)
+                let fileNoExtName = file.name.substr(0, file.name.lastIndexOf("."));
+                formData_upload.append('fileMd5', fileNoExtName); //md5值
+                formData_upload.append('name', `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001/${type}/${file.name}`); //文件路径带后缀
                 formData_upload.append('file', file); //文件
-                formData_upload.append('fileName', fileName); //文件名
-                formData_upload.append('realName', file.name); //文件名
-                formData_upload.append('type', type); //文件名
-                formData_upload.append('makerInfo', JSON.stringify(makerInfo)); //文件名
-                let affirm = await http.sendFile(formData_upload, (data) => { progress(data) })
-                if (affirm.code === 0) {
-                    callback(affirm.result)
-                    reslove(affirm);
-                }
+                console.log(fileNoExtName, `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001/${type}/${file.name}`);
+                Http.Request('post', '/clientApp/upload', formData_upload, (data) => { progress(data); }).then(data => {
+                    if (data) {
+                        callback(data.result);
+                        reslove(data);
+                    } else {
+                        reject({ file: file, msg: "上传失败" });
+                    }
+                }).catch(error => {
+                    reject(error.data);
+                });
+                // console.log(file)
+                // formData_upload.append('file', file); //文件
+                // formData_upload.append('fileName', fileName); //文件名
+                // formData_upload.append('realName', file.name); //文件名
+                // formData_upload.append('type', type); //文件名
+                // formData_upload.append('makerInfo', JSON.stringify(makerInfo)); //文件名
+                // let affirm = await http.sendFile(formData_upload, (data) => { progress(data) })
+                // if (affirm.code === 0) {
+                //     callback(affirm.result)
+                //     reslove(affirm);
+                // }
             }
-        })
-    })
-
+        });
+    });
 }
+let s = "aresf.png";

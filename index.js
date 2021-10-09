@@ -129,6 +129,10 @@ new Vue({
                 progress: 0,
                 count: "0/0"
             },
+            login: {
+                show: false,
+                str: "",
+            }
         };
     },
     directives: {
@@ -346,17 +350,45 @@ new Vue({
     mounted() {
         this.setPlane = false;
         //this.centerDialogVisible = true;
-        if (localStorage.getItem("userAccount")) {
-            this.makerInfo.userAccount = localStorage.getItem("userAccount");
+        if (User.token) {
+            this.makerInfo.userAccount = User.token;
         } else {
-            let requestData = { account: Date.now(), makerName: this.makerInfo.makerName, gameName: this.makerInfo.gameName };
-            http.login(requestData).then((success) => {
-                localStorage.setItem("userAccount", requestData.account);
-                this.makerInfo.userAccount = requestData.account;
-            });
+            let requestData = { appID: User.appID, appSecret: User.appSecret };
+            this.centerDialogVisible = true;
+            this.login.show = true;
+            this.login.str = "正在登陆...";
+            let login = () => {
+                setTimeout(() => {
+                    Http.Request("post", '/clientApp/login', requestData).then((data) => {
+                        if (data.code == 0) {
+                            User.setToken(data.result.token.access_token);
+                        } else {
+                            this.$message.info(data.msg);
+                        }
+                        this.login.str = `登陆成功!`;
+                        this.dotHide();
+                        setTimeout(() => {
+                            this.centerDialogVisible = false;
+                            this.login.show = false;
+                        }, 1000);
+                    }).catch((error) => {
+                        this.$message.error(error.msg);
+                        let time = 5;
+                        let id = setInterval(() => {
+                            this.login.str = `登陆失败,将在${time--}秒后重试!`;
+                            if (time == 0) {
+                                login();
+                                clearInterval(id);
+                            }
+                        }, 1000);
+                    });
+                }, 2000);
+            };
+            login();
         }
     },
     beforeCreate() {
+        new User();
         new Http("http://10.0.30.117:10999");
         new MakerList();
     },
@@ -495,15 +527,19 @@ new Vue({
             let load = document.querySelector(".load");
             if (!load) return;
             for (let i = 0; i < load.children.length; ++i) {
-                load.children[i].style.animationPlayState = "running";
-                load.children[i].style.display = 'inline';
+                if (load.children[i].className.substr(0, 3) == 'dot') {
+                    load.children[i].style.animationPlayState = "running";
+                    load.children[i].style.display = 'inline';
+                }
             }
         },
         dotHide() {
             let load = document.querySelector(".load");
             for (let i = 0; i < load.children.length; ++i) {
-                load.children[i].style.animationPlayState = "paused";
-                load.children[i].style.display = 'none';
+                if (load.children[i].className.substr(0, 3) == 'dot') {
+                    load.children[i].style.animationPlayState = "paused";
+                    load.children[i].style.display = 'none';
+                }
             }
         },
         abortUpload() {
@@ -560,7 +596,7 @@ new Vue({
                                             return;
                                         }
                                         await uploadMultiple(fileData.file, key == 'particle' ? 'particle' : 'spine', this.makerInfo, (progress) => {
-                                            this.current.progress = progress.toString();
+                                            this.current.progress = progress;
                                         }, () => {
                                             this.total.count = `${++currentUploadId}/${count}`;
                                             this.total.progress = Math.floor((currentUploadId / count) * 100);
@@ -575,21 +611,22 @@ new Vue({
                     return;
                 }
             }
-            http.sendConfig({ interactive: { assets: this.interactive }, config: this.config.getData(), makerInfo: this.makerInfo }).then((data) => {
+            let result = await Http.Request('post', '/clientApp/json', { fileName: "config", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001`, jsonString: this.config.getData() });
+            if (!this.upLoading) {
+                return;
+            }
+            if (result.code == 0) {
+                result = await Http.Request('post', '/clientApp/json', { fileName: "interactive", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset`, jsonString: { assets: this.interactive } });
+            }
+            if (result.code == 0) {
                 this.dotHide();
-                if (!this.upLoading) {
-                    return;
-                }
-                this.$message.info(data.data.msg);
-                this.remoteAssetDb = data.data.data.data;
-            }).catch((error) => {
-                this.$message.error(error.msg);
-                this.dotHide();
-            });
+                this.$message.info('处理完成,预览已准备完成!');
+                this.remoteAssetDb = `http://10.0.30.117/download/${User.appID}/${User.UUID}/${User.deskID}`;
+            }
         },
         loadPriview() {
             this.centerDialogVisible = false;
-            window.open(`http://coolarr.com:8090/m001maker/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
+            window.open(`http://127.0.0.1:1270/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
         },
         checkConfig() {
             for (let i = 0; i < this.config.BaseConfig.Question_DataBase.length; ++i) {
@@ -615,14 +652,27 @@ new Vue({
         /** 导出 */
         exportConfig() {
             if (!this.checkConfig()) return;
-            console.log("配置表对象", this.config);
-            console.log("资源加载列表", this.interactive);
-            console.log("预览列表", this.previewData);
-            http.downLoadAsset({ makerInfo: this.makerInfo }).then((data) => {
-                window.open(data.data.data.data);
+            Http.Request("post", '/clientApp/export', { filePath: '/Asset' }).then((data) => {
+                if (data.code == 0) {
+                    if (data.result) {
+                        window.open(data.result);
+                    } else {
+                        this.$message.error("获取下载地址错误");
+                    }
+                } else {
+                    this.$message.info(data.msg);
+                }
             }).catch((error) => {
-                this.$message.info(error.data.msg);
+                this.$message.error(error.msg);
             });
+            // console.log("配置表对象", this.config);
+            // console.log("资源加载列表", this.interactive);
+            // console.log("预览列表", this.previewData);
+            // http.downLoadAsset({ makerInfo: this.makerInfo }).then((data) => {
+            //     window.open(data.data.data.data);
+            // }).catch((error) => {
+            //     this.$message.info(error.data.msg);
+            // });
         },
         // 切换题库
         changTabs(e) {
