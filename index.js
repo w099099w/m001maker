@@ -652,7 +652,7 @@ new Vue({
         /** 导出 */
         exportConfig() {
             if (!this.checkConfig()) return;
-            Http.Request("post", '/clientApp/export', { filePath: '/Asset' }).then((data) => {
+            Http.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
                 if (data.code == 0) {
                     if (data.result) {
                         window.open(data.result);
