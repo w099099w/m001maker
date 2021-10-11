@@ -1,13 +1,7 @@
-function uploadMultiple(file, type, makerInfo, progress, callback) {
+function uploadMultiple(network, file, type, makerInfo, progress, callback) {
     return new Promise((reslove, reject) => {
         let burstSize = 2 * 1024 * 1024; //分片大小2M
         let count = 0; //成功上传了几个分片
-        // const loading = Vue.prototype.$loading({
-        //     lock: true,
-        //     text: (file.size > burstSize) ? '上传' + count / Math.ceil(file.size / burstSize) + "%" : '上传...',
-        //     background: 'rgba(0, 0, 0, 0.7)'
-        // })
-
         getFileMD5(file, async(md5, chunkArr) => {
             //当文件大于分片大小时，进行分片上传
             console.log(burstSize);
@@ -67,7 +61,7 @@ function uploadMultiple(file, type, makerInfo, progress, callback) {
                 formData_upload.append('name', `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001/${type}/${file.name}`); //文件路径带后缀
                 formData_upload.append('file', file); //文件
                 console.log(fileNoExtName, `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001/${type}/${file.name}`);
-                Http.Request('post', '/clientApp/upload', formData_upload, (data) => { progress(data); }).then(data => {
+                network.Request('post', '/clientApp/upload', formData_upload, (data) => { progress(data); }).then(data => {
                     if (data) {
                         callback(data.result);
                         reslove(data);

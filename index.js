@@ -350,7 +350,6 @@ new Vue({
     // 页面加载完成
     mounted() {
         this.setPlane = false;
-        1
         //this.centerDialogVisible = true;
         if (User.token) {
             this.makerInfo.userAccount = User.token;
@@ -577,7 +576,7 @@ new Vue({
                                     if (!this.upLoading) {
                                         return;
                                     }
-                                    await uploadMultiple(fileData.file, key == 'image' ? 'image' : 'sound', this.makerInfo, (progress) => {
+                                    await uploadMultiple(this.HTTP, fileData.file, key == 'image' ? 'image' : 'sound', this.makerInfo, (progress) => {
                                         this.current.progress = progress;
                                     }, () => {
                                         this.total.count = `${++currentUploadId}/${count}`;
@@ -598,7 +597,7 @@ new Vue({
                                         if (!this.upLoading) {
                                             return;
                                         }
-                                        await uploadMultiple(fileData.file, key == 'particle' ? 'particle' : 'spine', this.makerInfo, (progress) => {
+                                        await uploadMultiple(this.HTTP, fileData.file, key == 'particle' ? 'particle' : 'spine', this.makerInfo, (progress) => {
                                             this.current.progress = progress;
                                         }, () => {
                                             this.total.count = `${++currentUploadId}/${count}`;
@@ -629,7 +628,7 @@ new Vue({
         },
         loadPriview() {
             this.centerDialogVisible = false;
-            window.open(`http://coolarr.com:8090/m001maker/m001Web/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
+            window.open(`http://coolarr.com:8090/m001maker/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
         },
         checkConfig() {
             for (let i = 0; i < this.config.BaseConfig.Question_DataBase.length; ++i) {
