@@ -67,7 +67,6 @@ class Http {
                     let url = params ? `${this.baseUrl}?${params}` : this.baseUrl;
                     return this.instance.get(url);
                 }
-
         }
     }
 }
