@@ -388,7 +388,6 @@ new Vue({
                 }, 2000);
             };
             login();
-            56
         }
     },
     beforeCreate() {
