@@ -218,9 +218,9 @@ new Vue({
                 } else {
                     if (this.currentQuestion.select_Fixed.length < this.buttonNum[this.currentQuestion.layoutID % 5]) {
                         for (let i = this.currentQuestion.select_Fixed.length; i < this.buttonNum[this.currentQuestion.layoutID % 5]; ++i) {
-                            this.currentQuestion.select_Fixed.push(new Button());
-                            this.currentPriview.select_Fixed.push(new Button());
-                            this.questionCache.select_Fixed.push(new Button());
+                            this.currentQuestion.select_Fixed.push(new Button(i > 0 ? false : true));
+                            this.currentPriview.select_Fixed.push(new Button(i > 0 ? false : true));
+                            this.questionCache.select_Fixed.push(new Button(i > 0 ? false : true));
                         }
                     } else {
                         this.currentQuestion.select_Fixed.splice(this.buttonNum[this.currentQuestion.layoutID % 5], this.currentQuestion.select_Fixed.length - this.buttonNum[this.currentQuestion.layoutID % 5]);
