@@ -132,7 +132,8 @@ new Vue({
             login: {
                 show: false,
                 str: "",
-            }
+            },
+            HTTP: new Http("http://10.0.30.117:10999")
         };
     },
     directives: {
@@ -352,6 +353,7 @@ new Vue({
         //this.centerDialogVisible = true;
         if (User.token) {
             this.makerInfo.userAccount = User.token;
+            this.HTTP.setToken(User.token);
         } else {
             let requestData = { appID: User.appID, appSecret: User.appSecret };
             this.centerDialogVisible = true;
@@ -359,9 +361,10 @@ new Vue({
             this.login.str = "正在登陆...";
             let login = () => {
                 setTimeout(() => {
-                    Http.Request("post", '/clientApp/login', requestData).then((data) => {
+                    this.HTTP.Request("post", '/clientApp/login', requestData).then((data) => {
                         if (data.code == 0) {
                             User.setToken(data.result.token.access_token);
+                            this.HTTP.setToken(User.token);
                         } else {
                             this.$message.info(data.msg);
                         }
@@ -389,7 +392,6 @@ new Vue({
     },
     beforeCreate() {
         new User();
-        new Http("http://10.0.30.117:10999");
         new MakerList();
     },
     // 方法集合
@@ -611,12 +613,12 @@ new Vue({
                     return;
                 }
             }
-            let result = await Http.Request('post', '/clientApp/json', { fileName: "config", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001`, jsonString: this.config.getData() });
+            let result = await this.HTTP.Request('post', '/clientApp/json', { fileName: "config", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001`, jsonString: this.config.getData() });
             if (!this.upLoading) {
                 return;
             }
             if (result.code == 0) {
-                result = await Http.Request('post', '/clientApp/json', { fileName: "interactive", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset`, jsonString: { assets: this.interactive } });
+                result = await this.HTTP.Request('post', '/clientApp/json', { fileName: "interactive", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset`, jsonString: { assets: this.interactive } });
             }
             if (result.code == 0) {
                 this.dotHide();
@@ -626,7 +628,7 @@ new Vue({
         },
         loadPriview() {
             this.centerDialogVisible = false;
-            window.open(`http://127.0.0.1:1270/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
+            window.open(`http://coolarr.com:8090/m001maker/m001Web/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
         },
         checkConfig() {
             for (let i = 0; i < this.config.BaseConfig.Question_DataBase.length; ++i) {
@@ -652,7 +654,7 @@ new Vue({
         /** 导出 */
         exportConfig() {
             if (!this.checkConfig()) return;
-            Http.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
+            this.HTTP.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
                 if (data.code == 0) {
                     if (data.result) {
                         window.open(data.result);

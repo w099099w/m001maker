@@ -1,11 +1,14 @@
 class Http {
+    setToken(token) {
+        this.token = token;
+    }
     constructor(Url) {
-        Http.baseUrl = Url;
-        Http.instance = axios.create({ timeout: 1000 * 12 });
-        Http.instance.interceptors.request.use(
+        this.baseUrl = Url;
+        this.instance = axios.create({ timeout: 1000 * 12 });
+        this.instance.interceptors.request.use(
             config => {
-                if (User.token) {
-                    config.headers.Authorization = "Bearer " + User.token;
+                if (this.token) {
+                    config.headers.Authorization = "Bearer " + this.token;
                 }
                 return config;
             },
@@ -14,7 +17,7 @@ class Http {
             }
         );
         /****** response拦截器 ==> 对响应做处理 ******/
-        Http.instance.interceptors.response.use(
+        this.instance.interceptors.response.use(
             response => { //成功请求到数据
                 Loading.hide();
                 if (response.data.code === 400 || response.data.code === 401) { //未经授权时，统一处理
@@ -38,16 +41,13 @@ class Http {
             }
         );
     }
-    static Request(method, route, params, progress, isLoadind = false) {
-        if (!Http.instance) {
-            this.$message.error("请先创建对象");
-        }
+    Request(method, route, params, progress, isLoadind = false) {
         if (isLoadind) {
             Loading.show(isLoadind);
         }
         switch (method.toLocaleUpperCase()) {
             case "POST":
-                return Http.instance.post(`${Http.baseUrl}${route}`, params, {
+                return this.instance.post(`${this.baseUrl}${route}`, params, {
                     onUploadProgress: progressEvent => {
                         progress ? progress((progressEvent.loaded / progressEvent.total * 100 | 0)) : null;
                     }
@@ -64,45 +64,10 @@ class Http {
                             })
                             .join('&');
                     }
-                    let url = params ? `${Http.baseUrl}?${params}` : Http.baseUrl;
-                    return Http.instance.get(url);
+                    let url = params ? `${this.baseUrl}?${params}` : this.baseUrl;
+                    return this.instance.get(url);
                 }
 
         }
     }
 }
-// let instance = axios.create({ timeout: 1000 * 12 });
-// const baseUrl = "http://coolarr.com:1274";
-// const http = {
-//     // 获取用户数据
-//     login(params) {
-//         startLoading();
-//         return instance.post(`${baseUrl}/Maker/Login`, params);
-//     },
-//     sendConfig(params) {
-//         return instance.post(`${baseUrl}/Maker/Upload/Config`, params);
-//     },
-//     sendFileChunk(params, progress) {
-//         return instance.post(`${baseUrl}/Maker/Assets/UpLoadChunk`, params, {
-//             onUploadProgress: progressEvent => {
-//                 progress((progressEvent.loaded / progressEvent.total * 100 | 0))
-//             }
-//         });
-//     },
-//     downLoadAsset(params) {
-//         return instance.post(`${baseUrl}/Maker/DownloadAsset`, params);
-//     },
-//     sendFile(params, progress) {
-//         return instance.post(`${baseUrl}/Maker/Assets/UpLoadFile`, params, {
-//             onUploadProgress: progressEvent => {
-//                 progress((progressEvent.loaded / progressEvent.total * 100 | 0))
-//             }
-//         });
-//     },
-//     mergeFileChunk(params) {
-//         return instance.post(`${baseUrl}/Maker/Assets/MergeFileChunk`, params);
-//     },
-//     generateUploadId(params) {
-//         return instance.post(`${baseUrl}/Maker/Assets/GenerateUploadId`, params);
-//     }
-// }
