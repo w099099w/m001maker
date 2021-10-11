@@ -350,6 +350,7 @@ new Vue({
     // 页面加载完成
     mounted() {
         this.setPlane = false;
+        1
         //this.centerDialogVisible = true;
         if (User.token) {
             this.makerInfo.userAccount = User.token;
