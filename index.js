@@ -398,7 +398,7 @@ new Vue({
     // 方法集合
     methods: {
         visiblePriview() {
-            let show = document.body.clientWidth < 1300;
+            let show = document.body.clientWidth < 1700;
             if (show && document.getElementById("priview").classList.contains('nodehide')) {
                 return;
             } else if (!show && document.getElementById("priview").classList.contains('nodeshow')) {
