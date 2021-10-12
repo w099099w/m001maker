@@ -365,8 +365,6 @@ new Vue({
                         if (data.code == 0) {
                             User.setToken(data.result.token.access_token);
                             this.HTTP.setToken(User.token);
-                        } else {
-                            this.$message.info(data.msg);
                         }
                         this.login.str = `登陆成功!`;
                         this.dotHide();
@@ -396,18 +394,32 @@ new Vue({
     },
     // 方法集合
     methods: {
+        assetDbDelete(asset, type) {
+            let interactiveKey, typeStr;
+            switch (type) {
+                case '0':
+                case '1':
+                    interactiveKey = asset.interactiveKey;
+                    typeStr = type == 0 ? "image" : 'sound';
+                    break;
+                case '2':
+                case '3':
+                    interactiveKey = asset.Files[0].interactiveKey;
+                    typeStr = type == 2 ? "spine" : 'particle';
+                    break;
+            }
+            if (!interactiveKey) return;
+            delete this.interactiveFile[typeStr][interactiveKey];
+            delete this.interactive[typeStr][interactiveKey];
+        },
         handlePreview(e, assetDb) {
             this.assetDb = assetDb;
             switch (e) {
                 case '0':
-                    {
-                        this.fileList.image = assetDb.GetAllIamge();
-                    }
+                    this.fileList.image = assetDb.GetAllIamge();
                     break;
                 case '1':
-                    {
-                        this.fileList.sound = assetDb.GetAllAudio();
-                    }
+                    this.fileList.sound = assetDb.GetAllAudio();
                     break;
                 case '2':
                     {
@@ -457,6 +469,7 @@ new Vue({
             return result;
         },
         selectResult(e, type, route, key) {
+            console.log("重置", e, type, route, key);
             if (type == 'bool') {
                 Utils.changeObjectByRoute.call(this, "config." + route, e, "data");
                 Utils.changeObjectByRoute.call(this, "previewData." + route, e, "data");
@@ -467,6 +480,7 @@ new Vue({
                 return;
             }
             if (e == "") {
+
                 Utils.changeObjectByRoute.call(this, "config." + route, "", "data", key);
                 Utils.changeObjectByRoute.call(this, "previewData." + route, "", "data", key);
                 return;
@@ -479,7 +493,6 @@ new Vue({
         },
         selectResultByQuestion(e, type, route, key) {
             if (type == 'bool') {
-                //config已被内部修改
                 Utils.changeObjectByRoute.call(this, "currentPriview." + route, e, "data");
                 return;
             }
@@ -563,6 +576,7 @@ new Vue({
             let count = this.getFileCount();
             if (count != 0) {
                 let currentUploadId = 0;
+                this.total.count = `0/${count}`;
                 for (let key in this.interactiveFile) {
                     let item = this.interactiveFile[key];
                     switch (key) {
@@ -576,12 +590,19 @@ new Vue({
                                     if (!this.upLoading) {
                                         return;
                                     }
-                                    await uploadMultiple(this.HTTP, fileData.file, key == 'image' ? 'image' : 'sound', this.makerInfo, (progress) => {
+                                    let result = await uploadMultiple(this.HTTP, fileData.file, key == 'image' ? 'image' : 'sound', this.makerInfo, (progress) => {
+                                        console.log(progress);
                                         this.current.progress = progress;
                                     }, () => {
                                         this.total.count = `${++currentUploadId}/${count}`;
                                         this.total.progress = Math.floor((currentUploadId / count) * 100);
                                     });
+                                    if (result.code != 0) {
+                                        this.dotHide();
+                                        this.current.filename = result.code == 401 ? '授权失败!请刷新页面重新登陆!' : result.msg;
+                                        this.total.count = '0/0';
+                                        return;
+                                    }
                                 }
                             }
                             break;
@@ -603,6 +624,12 @@ new Vue({
                                             this.total.count = `${++currentUploadId}/${count}`;
                                             this.total.progress = Math.floor((currentUploadId / count) * 100);
                                         });
+                                        if (result.code != 0) {
+                                            this.dotHide();
+                                            this.current.filename = result.code == 401 ? '授权失败!请刷新页面重新登陆!' : result.msg;
+                                            this.total.count = '0/0';
+                                            return;
+                                        }
                                     });
                                 }
                             }
@@ -615,16 +642,26 @@ new Vue({
             }
             let result = await this.HTTP.Request('post', '/clientApp/json', { fileName: "config", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset/M001`, jsonString: this.config.getData() });
             if (!this.upLoading) {
+                this.dotHide();
                 return;
             }
-            if (result.code == 0) {
-                result = await this.HTTP.Request('post', '/clientApp/json', { fileName: "interactive", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset`, jsonString: { assets: this.interactive } });
-            }
-            if (result.code == 0) {
+            if (result.code != 0) {
                 this.dotHide();
-                this.$message.info('处理完成,预览已准备完成!');
-                this.remoteAssetDb = `http://10.0.30.117/download/${User.appID}/${User.UUID}/${User.deskID}`;
+                this.$message.error(result.msg);
+                return;
             }
+            result = await this.HTTP.Request('post', '/clientApp/json', { fileName: "interactive", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset`, jsonString: { assets: this.interactive } });
+            if (result.code != 0) {
+                this.dotHide();
+                this.$message.error(result.msg);
+                return;
+            }
+            if (!this.upLoading) {
+                return;
+            }
+            this.dotHide();
+            this.$message.info('处理完成,预览已准备完成!');
+            this.remoteAssetDb = `http://10.0.30.117/download/${User.appID}/${User.UUID}/${User.deskID}`;
         },
         loadPriview() {
             this.centerDialogVisible = false;
@@ -653,23 +690,22 @@ new Vue({
         },
         /** 导出 */
         exportConfig() {
-            if (!this.checkConfig()) return;
-            this.HTTP.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
-                if (data.code == 0) {
-                    if (data.result) {
-                        window.open(data.result);
-                    } else {
-                        this.$message.error("获取下载地址错误");
-                    }
-                } else {
-                    this.$message.info(data.msg);
-                }
-            }).catch((error) => {
-                this.$message.error(error.msg);
-            });
-            // console.log("配置表对象", this.config);
-            // console.log("资源加载列表", this.interactive);
-            // console.log("预览列表", this.previewData);
+            // if (!this.checkConfig()) return;
+            // this.HTTP.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
+            //     if (data.code == 0) {
+            //         if (data.result) {
+            //             window.open(data.result);
+            //         } else {
+            //             this.$message.error("获取下载地址错误");
+            //         }
+            //     }
+            // }).catch((error) => {
+            //     this.$message.error(error.msg);
+            // });
+            console.log("配置表对象", this.config);
+            console.log("资源加载列表", this.interactive);
+            console.log("资源映射列表", this.interactiveFile);
+            console.log("预览列表", this.previewData);
             // http.downLoadAsset({ makerInfo: this.makerInfo }).then((data) => {
             //     window.open(data.data.data.data);
             // }).catch((error) => {

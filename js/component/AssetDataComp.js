@@ -98,7 +98,7 @@ Vue.component("asset", {
 		</el-upload>
 	</div>
 	`,
-    props: ['onchange', 'game_name'],
+    props: ['onchange', 'game_name', 'delete_event'],
     data() {
         return {
             assetType: 0,
@@ -185,20 +185,26 @@ Vue.component("asset", {
             this.spineData = null;
             this.imageURL = "";
             this.audioURL = "";
+            let removeFile = null;
             if (this.assetType == 0) {
+                removeFile = this.assets.GetImage(e);
                 this.assets.RemoveImage(e);
                 this.asset = this.assets.GetImages();
             } else if (this.assetType == 1) {
+                removeFile = this.assets.GetAudio(e);
                 this.assets.RemoveAudio(e);
                 this.asset = this.assets.GetAudios();
             } else if (this.assetType == 2) {
+                removeFile = this.assets.GetSpineByName(e.name);
                 this.assets.RemoveSpine(e.name);
                 this.asset = this.assets.GetAllSpine();
             } else if (this.assetType == 3) {
+                removeFile = this.assets.GetEffectByName(e.name);
                 this.assets.RemoveEffect(e.name);
                 this.asset = this.assets.GetAllEffects();
             }
             if (this.onchange) this.onchange(this.assetType, this);
+            if (this.delete_event) this.delete_event(removeFile, this.assetType);
         },
         clickAsset(e) {
             if (this.assetType == 0) {

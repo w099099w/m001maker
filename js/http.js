@@ -23,9 +23,7 @@ class Http {
                 if (response.data.code === 400 || response.data.code === 401) { //未经授权时，统一处理
                     ELEMENT.Message.info("登录已过期请刷新页面,重新登陆!");
                     User.removeToken();
-                    return null;
                 }
-                console.log("response", response.data);
                 return response.data;
             },
             error => { //响应错误处理
@@ -33,10 +31,12 @@ class Http {
                 let errData;
                 if (!error.response && error.request.status == 0) {
                     errData = { code: -1, msg: '网络连接失败!' };
+                } else if (error.code == 'ECONNABORTED' && error.message.includes('timeout')) {
+                    errData = { code: -1, msg: '请求超时' };
                 } else {
                     errData = error.data;
                 }
-                console.log(error, error.request, error.data, error.response, error.config);
+                console.log(error, error.request, error.code, error.message, error.response, error.config);
                 return Promise.reject(errData);
             }
         );
