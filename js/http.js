@@ -4,7 +4,7 @@ class Http {
     }
     constructor(Url) {
         this.baseUrl = Url;
-        this.instance = axios.create({ timeout: 1000 * 12 });
+        this.instance = axios.create({ timeout: 1000 * 120 });
         this.instance.interceptors.request.use(
             config => {
                 if (this.token) {
@@ -29,10 +29,10 @@ class Http {
             error => { //响应错误处理
                 Loading.hide();
                 let errData;
-                if (!error.response && error.request.status == 0) {
-                    errData = { code: -1, msg: '网络连接失败!' };
-                } else if (error.code == 'ECONNABORTED' && error.message.includes('timeout')) {
+                if (error.code == 'ECONNABORTED' && error.message.includes('timeout')) {
                     errData = { code: -1, msg: '请求超时' };
+                } else if (!error.response && error.request.status == 0) {
+                    errData = { code: -1, msg: '网络连接失败!' };
                 } else {
                     errData = error.data;
                 }
@@ -49,7 +49,7 @@ class Http {
             case "POST":
                 return this.instance.post(`${this.baseUrl}${route}`, params, {
                     onUploadProgress: progressEvent => {
-                        progress ? progress((progressEvent.loaded / progressEvent.total * 100 | 0)) : null;
+                        progress ? progress(Math.ceil(progressEvent.loaded / progressEvent.total * 100 | 0)) : null;
                     }
                 });
             case "GET":

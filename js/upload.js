@@ -43,7 +43,7 @@ function getFile(file, chunkSize, callback) {
 
 function uploadMultiple(network, file, type, makerInfo, progress, callback) {
     return new Promise((reslove, reject) => {
-        let burstSize = 1 * 1024 * 1024; //分片大小2M
+        let burstSize = 2 * 1024 * 1024; //分片大小2M
         getFile(file, burstSize, async(chunkArr) => {
             //当文件大于分片大小时，进行分片上传
             console.log(burstSize);
@@ -68,9 +68,15 @@ function uploadMultiple(network, file, type, makerInfo, progress, callback) {
                     formData_upload.set('chunkSize', burstSize); //分片大小
                     formData_upload.set('file', chunkArr[i].file); //分片文件
                     // 分片上传
-                    upResult = await network.Request('post', '/clientApp/upload', formData_upload, (data) => { progress(i * percentChunk + (data / 100) * percentChunk); });
-                    if (upResult.code != 0 && upResult.code != 50007) {
-                        reject(data);
+                    let rejectData = null;
+                    upResult = await network.Request('post', '/clientApp/upload', formData_upload, (data) => { progress(Math.ceil(i * percentChunk + (data / 100) * percentChunk)); }).catch((error) => {
+                        rejectData = error;
+                    });
+                    if (rejectData) {
+                        reject(rejectData);
+                        return;
+                    } else if (upResult.code != 0 && upResult.code != 50007) {
+                        reject(upResult);
                         return;
                     }
                 }
@@ -90,8 +96,6 @@ function uploadMultiple(network, file, type, makerInfo, progress, callback) {
                     if (data) {
                         callback(data.result);
                         reslove(data);
-                    } else if (data == 401) {
-                        reject(data);
                     }
                 }).catch(error => {
                     reject(error.data);

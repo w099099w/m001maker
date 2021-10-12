@@ -358,25 +358,25 @@ new Vue({
             let requestData = { appID: User.appID, appSecret: User.appSecret };
             this.centerDialogVisible = true;
             this.login.show = true;
-            this.login.str = "正在登陆...";
+            this.login.str = "正在登录...";
             let login = () => {
                 setTimeout(() => {
                     this.HTTP.Request("post", '/clientApp/login', requestData).then((data) => {
+                        this.login.str = data.code == 0 ? `登录成功!` : data.msg;
+                        this.dotHide();
                         if (data.code == 0) {
                             User.setToken(data.result.token.access_token);
                             this.HTTP.setToken(User.token);
+                            setTimeout(() => {
+                                this.centerDialogVisible = false;
+                                this.login.show = false;
+                            }, 1000);
                         }
-                        this.login.str = `登陆成功!`;
-                        this.dotHide();
-                        setTimeout(() => {
-                            this.centerDialogVisible = false;
-                            this.login.show = false;
-                        }, 1000);
                     }).catch((error) => {
                         this.$message.error(error.msg);
                         let time = 5;
                         let id = setInterval(() => {
-                            this.login.str = `登陆失败,将在${time--}秒后重试!`;
+                            this.login.str = `登录失败,将在${time--}秒后重试!`;
                             if (time == 0) {
                                 login();
                                 clearInterval(id);
@@ -590,13 +590,17 @@ new Vue({
                                     if (!this.upLoading) {
                                         return;
                                     }
+                                    let rejectResult = null;
                                     let result = await uploadMultiple(this.HTTP, fileData.file, key == 'image' ? 'image' : 'sound', this.makerInfo, (progress) => {
                                         console.log(progress);
                                         this.current.progress = progress;
                                     }, () => {
                                         this.total.count = `${++currentUploadId}/${count}`;
                                         this.total.progress = Math.floor((currentUploadId / count) * 100);
+                                    }).catch(error => {
+                                        rejectResult = error;
                                     });
+                                    result = rejectResult ? rejectResult : result;
                                     if (result.code != 0) {
                                         this.dotHide();
                                         this.current.filename = result.code == 401 ? '授权失败!请刷新页面重新登陆!' : result.msg;
@@ -618,12 +622,16 @@ new Vue({
                                         if (!this.upLoading) {
                                             return;
                                         }
-                                        await uploadMultiple(this.HTTP, fileData.file, key == 'particle' ? 'particle' : 'spine', this.makerInfo, (progress) => {
+                                        let rejectResult = null;
+                                        let result = await uploadMultiple(this.HTTP, fileData.file, key == 'particle' ? 'particle' : 'spine', this.makerInfo, (progress) => {
                                             this.current.progress = progress;
                                         }, () => {
                                             this.total.count = `${++currentUploadId}/${count}`;
                                             this.total.progress = Math.floor((currentUploadId / count) * 100);
+                                        }).catch(error => {
+                                            rejectResult = error;
                                         });
+                                        result = rejectResult ? rejectResult : result;
                                         if (result.code != 0) {
                                             this.dotHide();
                                             this.current.filename = result.code == 401 ? '授权失败!请刷新页面重新登陆!' : result.msg;
