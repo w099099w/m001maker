@@ -261,7 +261,7 @@ new Vue({
                 }
                 this.config.OtherList.spine.guideAnim.animName = [];
                 for (let i = 0; i < value; ++i) {
-                    this.config.OtherList.spine.guideAnim.animName.push("step0" + (value + 1));
+                    this.config.OtherList.spine.guideAnim.animName.push("step0" + value);
                 }
                 this.iguideSize = value;
             }
@@ -721,22 +721,24 @@ new Vue({
         },
         /** 导出 */
         exportConfig() {
-            // if (!this.checkConfig()) return;
-            // this.HTTP.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
-            //     if (data.code == 0) {
-            //         if (data.result) {
-            //             window.open(data.result);
-            //         } else {
-            //             this.$message.error("获取下载地址错误");
-            //         }
-            //     }
-            // }).catch((error) => {
-            //     this.$message.error(error.msg);
-            // });
-            console.log("配置表对象", this.config);
-            console.log("资源加载列表", this.interactive);
-            console.log("资源映射列表", this.interactiveFile);
-            console.log("预览列表", this.previewData);
+            if (!this.checkConfig()) return;
+            this.HTTP.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
+                if (data.code == 0) {
+                    if (data.result) {
+                        window.open(data.result);
+                    } else {
+                        this.$message.error("获取下载地址错误");
+                    }
+                } else {
+                    this.$message.error(data.msg);
+                }
+            }).catch((error) => {
+                this.$message.error(error.msg);
+            });
+            // console.log("配置表对象", this.config);
+            // console.log("资源加载列表", this.interactive);
+            // console.log("资源映射列表", this.interactiveFile);
+            // console.log("预览列表", this.previewData);
             // http.downLoadAsset({ makerInfo: this.makerInfo }).then((data) => {
             //     window.open(data.data.data.data);
             // }).catch((error) => {
