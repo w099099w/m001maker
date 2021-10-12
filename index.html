@@ -23,7 +23,7 @@
                     <el-button size="small" @click="preview" type="primary">预览</el-button>
                 </div>
             </div>
-            <div v-if="editableTabsValue!='0'" class="preview">
+            <div id="priview" v-show="editableTabsValue!='0' && isVisible" class="preview">
                 <img class='bgImage' v-if="previewData.BaseConfig.BgSetting.centerRes" :src="previewData.BaseConfig.BgSetting.centerRes">
                 <img class='quitButton' v-if="previewData.OtherList.Btn_quit" :src="previewData.OtherList.Btn_quit">
                 <div class='questionBar'>

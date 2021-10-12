@@ -49,10 +49,28 @@
     word-wrap: break-word;
     word-break: break-all;
 }
+@keyframes NodeShow{
+    0% {opacity: 0%}
+    100% {opacity: 100%}
+}
+@keyframes NodeHide{
+    0% {opacity: 100%}
+    100% {opacity: 0%}
+}
+.nodeshow{
+    animation-name: NodeShow;
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
+}
+.nodehide{
+    animation-name: NodeHide;
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
+}
 @keyframes dotMove{
     0% {left: 0%;opacity: 0%;}
     20% {opacity: 100%; }
-    40% {left: 52.5%;opacity: 100%;};
+    40% {left: 52.5%;opacity: 100%;}
     60% {left: 52.5%;opacity: 100%;}
     90%{opacity: 0%;}
     100% {left: 100%;opacity: 0%;}
@@ -120,6 +138,7 @@
         animation-delay: 0.8s;
     }
 }
+
 .preview {
     width: 640px;
     height: 360px;

@@ -133,6 +133,7 @@ new Vue({
                 show: false,
                 str: "",
             },
+            isVisible: false,
             HTTP: new Http("http://10.0.30.117:10999")
         };
     },
@@ -349,6 +350,8 @@ new Vue({
     },
     // 页面加载完成
     mounted() {
+        this.visiblePriview();
+        window.onresize = this.visiblePriview.bind(this);
         this.setPlane = false;
         //this.centerDialogVisible = true;
         if (User.token) {
@@ -394,6 +397,26 @@ new Vue({
     },
     // 方法集合
     methods: {
+        visiblePriview() {
+            let show = document.body.clientWidth < 1300;
+            if (show && document.getElementById("priview").classList.contains('nodehide')) {
+                return;
+            } else if (!show && document.getElementById("priview").classList.contains('nodeshow')) {
+                return;
+            }
+            document.getElementById("priview").classList.remove(show ? 'nodeshow' : 'nodehide');
+            document.getElementById("priview").classList.add(show ? 'nodehide' : 'nodeshow');
+            let hide = 0;
+            if (show) {
+                hide = setTimeout(() => {
+                    this.isVisible = false;
+                }, 1500);
+                this.$message.warning("由于可显示宽度小于预览宽度,预览界面已隐藏");
+            } else {
+                clearTimeout(hide);
+                this.isVisible = true;
+            }
+        },
         assetDbDelete(asset, type) {
             let interactiveKey, typeStr;
             switch (type) {
