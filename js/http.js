@@ -54,7 +54,7 @@ class Http {
                 });
             case "GET":
                 {
-                    if (typeof params === 'object') {
+                    if (params && typeof params === 'object') {
                         // params拆解成字符串
                         params = Object.keys(params)
                             .map(key => {
@@ -64,7 +64,7 @@ class Http {
                             })
                             .join('&');
                     }
-                    let url = params ? `${this.baseUrl}?${params}` : this.baseUrl;
+                    let url = params ? `${this.baseUrl}${route}?${params}` : this.baseUrl + route;
                     return this.instance.get(url);
                 }
         }

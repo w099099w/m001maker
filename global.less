@@ -1,12 +1,42 @@
 @import url("./css/element-ui.css");
-
-@font-face {
-    font-family: element-icons;
-    src: url(fonts/element-icons.woff?t=1472440741) format('woff'), url(fonts/element-icons.ttf?t=1472440741) format('truetype');
-    font-weight: 400;
-    font-style: normal
+@import url("./css/materialdesignicons.min.css");
+.mainbody{
+    top: 80px;
+    width: 100%;
+    height: 91%;
+    position: absolute;
+    display: flex;
+    .left{
+       width:250px;
+       background-color: #545c64;
+       .el-menu{
+        border-right: solid 1px #545c64;
+       }
+       .tac,.el-row{
+           width: 100% !important;
+           .el-col,.el-col-12{
+            width: 100% !important;
+           }
+       }
+    }  
+    .right{
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        height: auto !important; 
+        .list {
+            width: 80%;
+        }
+        .list .el-tabs__content {
+            position: relative;
+            height: 75vh;
+            overflow-y: auto;
+        }
+        .el-tabs__content .el-tabs__content{
+            height:auto
+        }
+    }
 }
-
 * {
     padding: 0;
     margin: 0;
@@ -14,14 +44,6 @@
 
 [v-cloak] {
     display: none;
-}
-
-.container {
-
-    .list {
-        width: 70%;
-        margin: 0 auto 12px;
-    }
 }
 
 .header {
@@ -67,6 +89,13 @@
     animation-duration: 1.5s;
     animation-fill-mode: both;
 }
+.copyright{
+    position: absolute;
+    text-align: center;
+    opacity: 50%;
+    width: 100%;
+    bottom: 3px;
+}
 @keyframes dotMove{
     0% {left: 0%;opacity: 0%;}
     20% {opacity: 100%; }
@@ -77,6 +106,9 @@
 }
 .login{
     height: 60px;
+}
+.download{
+    height:20px;
 }
 .load{
     margin-top: 7px;
@@ -146,7 +178,7 @@
     margin: 8px auto;
     position: fixed;
     top: 185px;
-    right: 17%;
+    right: 10%;
     // margin-left: -320px;
     z-index: 10;
     .bgImage{
@@ -589,11 +621,6 @@
     margin-top: 7px;
 }
 
-.el-tabs__content {
-    position: relative;
-    height: 75vh;
-    overflow-y: auto;
-}
 .audioList{
     display: flex;
     margin-top: 3px;

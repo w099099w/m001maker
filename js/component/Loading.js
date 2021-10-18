@@ -9,6 +9,9 @@ class Loading {
             background: 'rgba(0, 0, 0, 0.7)'
         });
     }
+    static setStr(str) {
+        Loading.loadingInstance.text = str;
+    }
     static hide() {
         if (Loading.loadingInstance) {
             Loading.loadingInstance.close();

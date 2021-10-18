@@ -1,3 +1,9 @@
+const DialogType = {
+    Hide: -1,
+    Login: 0,
+    Upload: 1,
+    Download: 2
+};
 new Vue({
     el: '#app',
     data() {
@@ -37,13 +43,9 @@ new Vue({
                     name: '2',
                 }
             ],
-            dialogData: {
-                type: "",
-                url: ""
-            },
-            centerDialogVisible: false,
             Button: [],
             ButtonFlash: [],
+            guideRes: "",
             layOut: [
                 { key: 0, name: "A1" },
                 { key: 1, name: "A2" },
@@ -133,8 +135,13 @@ new Vue({
                 show: false,
                 str: "",
             },
+            dialogType: -1,
             isVisible: false,
-            HTTP: new Http("http://10.0.30.117:10999")
+            download: false,
+            HTTP: new Http("http://10.0.30.117:10999"),
+            History: [],
+            progresState: null,
+            hideTimeOut: 0,
         };
     },
     directives: {
@@ -268,17 +275,10 @@ new Vue({
         },
         titleColor: {
             get() {
-                let color = this.currentQuestion.questionContentColor;
-                return "#" + color.r.toString(16) + color.g.toString(16) + color.b.toString(16);
+                return Utils.getColorStringFormObject(this.currentQuestion.questionContentColor);
             },
             set(value) {
-                value = value.substring(1);
-                let r = value.substring(0, 2);
-                let g = value.substring(2, 4);
-                let b = value.substring(4);
-                this.currentQuestion.questionContentColor.r = parseInt(r, 16);
-                this.currentQuestion.questionContentColor.g = parseInt(g, 16);
-                this.currentQuestion.questionContentColor.b = parseInt(b, 16);
+                this.currentQuestion.questionContentColor = Utils.getColorObjectFormString(value);
             }
         },
         /** 当前题库 */
@@ -343,6 +343,16 @@ new Vue({
                 }
             }
         },
+        centerDialogVisible: {
+            get() {
+                return this.dialogType != DialogType.Hide;
+            },
+            set(value) {
+                if (!value) {
+                    this.dialogType = DialogType.Hide;
+                }
+            }
+        },
         /** tab数量 */
         maxTabIndex() {
             return this.editableTabs.length;
@@ -350,16 +360,16 @@ new Vue({
     },
     // 页面加载完成
     mounted() {
+        document.onselectstart = () => { return false; };
         this.visiblePriview();
         window.onresize = this.visiblePriview.bind(this);
         this.setPlane = false;
-        //this.centerDialogVisible = true;
         if (User.token) {
             this.makerInfo.userAccount = User.token;
             this.HTTP.setToken(User.token);
         } else {
+            this.setDialog(DialogType.Login);
             let requestData = { appID: User.appID, appSecret: User.appSecret };
-            this.centerDialogVisible = true;
             this.login.show = true;
             this.login.str = "正在登录...";
             let login = () => {
@@ -371,7 +381,7 @@ new Vue({
                             User.setToken(data.result.token.access_token);
                             this.HTTP.setToken(User.token);
                             setTimeout(() => {
-                                this.centerDialogVisible = false;
+                                this.setDialog(DialogType.Hide);
                                 this.login.show = false;
                             }, 1000);
                         }
@@ -390,6 +400,17 @@ new Vue({
             };
             login();
         }
+        // let history = new ReadHistory();
+        // history.getData().then(data => {
+        //     this.History = data;
+        // });
+        this.assetDb = this.$refs.asset[0];
+        new Http("http://10.0.30.117/download").Request('get', '/m001237102c00e681746d1b8f0b39ef51ed911/f15e42b7-9ed8-28de-f397-14912738673a/1634017589745/Asset/interactive.txt').then(data => {
+            console.log(data);
+            data ? this.assetDb.AddRemoteAssets(data, 'http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/f15e42b7-9ed8-28de-f397-14912738673a/1634017589745', 'M001') : null;
+        });
+        // 
+        // console.log(this.assetDb);
     },
     beforeCreate() {
         new User();
@@ -397,6 +418,21 @@ new Vue({
     },
     // 方法集合
     methods: {
+        handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        setDialog(type) {
+            this.dialogType = type;
+            if (type == DialogType.Hide) {
+                this.current.filename = "";
+                this.current.progress = 0;
+                this.total.count = "0/0";
+                this.total.progress = 0;
+            }
+        },
         visiblePriview() {
             let show = document.body.clientWidth < 1700;
             if (show && document.getElementById("priview").classList.contains('nodehide')) {
@@ -406,14 +442,13 @@ new Vue({
             }
             document.getElementById("priview").classList.remove(show ? 'nodeshow' : 'nodehide');
             document.getElementById("priview").classList.add(show ? 'nodehide' : 'nodeshow');
-            let hide = 0;
             if (show) {
-                hide = setTimeout(() => {
+                this.hideTimeOut = setTimeout(() => {
                     this.isVisible = false;
                 }, 1500);
                 this.$message.warning("由于可显示宽度小于预览宽度,预览界面已隐藏");
             } else {
-                clearTimeout(hide);
+                clearTimeout(this.hideTimeOut);
                 this.isVisible = true;
             }
         },
@@ -439,7 +474,7 @@ new Vue({
             this.assetDb = assetDb;
             switch (e) {
                 case '0':
-                    this.fileList.image = assetDb.GetAllIamge();
+                    this.fileList.image = assetDb.GetAllImage();
                     break;
                 case '1':
                     this.fileList.sound = assetDb.GetAllAudio();
@@ -473,7 +508,7 @@ new Vue({
             switch (type) {
                 case 'image':
                 case 'sound':
-                    result = type == 'sound' ? this.assetDb.GetAudioByName(e) : this.assetDb.GetIamgeByName(e);
+                    result = type == 'sound' ? this.assetDb.GetAudioByName(e) : this.assetDb.GetImageByName(e);
                     break;
                 case 'spine':
                 case 'particle':
@@ -492,7 +527,6 @@ new Vue({
             return result;
         },
         selectResult(e, type, route, key) {
-            console.log("重置", e, type, route, key);
             if (type == 'bool') {
                 Utils.changeObjectByRoute.call(this, "config." + route, e, "data");
                 Utils.changeObjectByRoute.call(this, "previewData." + route, e, "data");
@@ -503,7 +537,6 @@ new Vue({
                 return;
             }
             if (e == "") {
-
                 Utils.changeObjectByRoute.call(this, "config." + route, "", "data", key);
                 Utils.changeObjectByRoute.call(this, "previewData." + route, "", "data", key);
                 return;
@@ -538,25 +571,14 @@ new Vue({
             let count = 0;
             for (let key in this.interactiveFile) {
                 let item = this.interactiveFile[key];
-                switch (key) {
-                    case 'sound':
-                    case 'image':
-                        {
-                            for (let ckey in item) {
-                                count++;
-                            }
-                        }
-                        break;
-                    case 'spine':
-                    case 'particle':
-                        {
-                            for (let ckey in item) {
-                                let citem = item[ckey];
-                                let files = key == 'particle' ? this.assetDb.GetEffectByName(citem).Files : this.assetDb.GetSpineByName(citem).Files;
-                                count += files.length;
-                            }
-                        }
-                        break;
+                if (key == 'sound' || key == 'image') {
+                    count += Object.keys(item).length;
+                } else {
+                    for (let ckey in item) {
+                        let citem = item[ckey];
+                        let files = key == 'particle' ? this.assetDb.GetEffectByName(citem).Files : this.assetDb.GetSpineByName(citem).Files;
+                        count += files.length;
+                    }
                 }
             }
             return count;
@@ -581,20 +603,17 @@ new Vue({
             }
         },
         abortUpload() {
+            this.download = false;
             this.upLoading = false;
-            this.centerDialogVisible = false;
+            this.setDialog(DialogType.Hide);
             this.dotHide();
-            this.current.filename = "";
-            this.current.progress = 0;
-            this.total.count = "0/0";
-            this.total.progress = 0;
         },
         /** 预览 */
         async preview() {
             if (!this.checkConfig()) return;
             this.dotShow();
             this.upLoading = true;
-            this.centerDialogVisible = true;
+            this.setDialog(DialogType.Upload);
             this.interactive.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
             let count = this.getFileCount();
             if (count != 0) {
@@ -608,7 +627,7 @@ new Vue({
                             {
                                 for (let ckey in item) {
                                     let citem = item[ckey];
-                                    let fileData = key == 'image' ? this.assetDb.GetIamgeByName(citem) : this.assetDb.GetAudioByName(citem);
+                                    let fileData = key == 'image' ? this.assetDb.GetImageByName(citem) : this.assetDb.GetAudioByName(citem);
                                     this.current.filename = fileData.realName;
                                     if (!this.upLoading) {
                                         return;
@@ -691,11 +710,13 @@ new Vue({
                 return;
             }
             this.dotHide();
+            this.total.progress = 100;
+            this.current.progress = 100;
             this.$message.info('处理完成,预览已准备完成!');
             this.remoteAssetDb = `http://10.0.30.117/download/${User.appID}/${User.UUID}/${User.deskID}`;
         },
         loadPriview() {
-            this.centerDialogVisible = false;
+            this.setDialog(DialogType.Hide);
             window.open(`http://coolarr.com:8090/m001maker/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
         },
         checkConfig() {
@@ -722,32 +743,47 @@ new Vue({
         /** 导出 */
         exportConfig() {
             if (!this.checkConfig()) return;
+            this.progresState = null;
+            this.setDialog(DialogType.Download);
+            setTimeout(() => document.querySelectorAll(".download .progress p")[0].innerHTML = "正在处理...", 0);
             this.HTTP.Request("post", '/clientApp/export', { filePath: `/${User.appID}/${User.UUID}/${User.deskID}` }).then((data) => {
                 if (data.code == 0) {
                     if (data.result) {
-                        window.open(data.result);
+                        document.querySelectorAll(".download .progress p")[0].innerHTML = "下载中...";
+                        this.total.progress = 0;
+                        this.total.count = "M001Asset.zip";
+                        axios.get(data.result, {
+                            responseType: 'blob',
+                            onDownloadProgress: progressEvent => {
+                                this.total.progress = Math.ceil(progressEvent.loaded / progressEvent.total * 100 | 0);
+                            }
+                        }).then(res => {
+                            let url = window.URL.createObjectURL(res.data);
+                            let a = document.createElement("a");
+                            a.style.display = "none";
+                            a.href = url;
+                            a.download = "M001Asset.zip";
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            this.dotHide();
+                        }).catch(() => this.dotHide());
                     } else {
+                        this.dotHide();
                         this.$message.error("获取下载地址错误");
                     }
                 } else {
+                    this.dotHide();
+                    document.querySelectorAll(".download .progress p")[0].innerHTML = "处理失败...";
+                    this.progresState = "exception";
+                    this.total.progress = 100;
                     this.$message.error(data.msg);
                 }
             }).catch((error) => {
                 this.$message.error(error.msg);
             });
-            // console.log("配置表对象", this.config);
-            // console.log("资源加载列表", this.interactive);
-            // console.log("资源映射列表", this.interactiveFile);
-            // console.log("预览列表", this.previewData);
-            // http.downLoadAsset({ makerInfo: this.makerInfo }).then((data) => {
-            //     window.open(data.data.data.data);
-            // }).catch((error) => {
-            //     this.$message.info(error.data.msg);
-            // });
         },
         // 切换题库
         changTabs(e) {
-            // 第一页为游戏流程配置，所以题库下标减一
             this.tabIndex = e.index;
             document.querySelector(".el-tabs__content").scrollTop = 0;
         },

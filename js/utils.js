@@ -1,31 +1,4 @@
 class Utils {
-    /** 
-     * @param type "PNG","MP3","PLIST","SKEL","ATLAS"
-     */
-    static verifyFileType(fileName, type) {
-            let i = fileName.lastIndexOf(".");
-            let types = {
-                "PNG": "png",
-                "MP3": "mp3",
-                "PLIST": "plist",
-                "SKEL": "skel",
-                "ATLAS": "atlas"
-            };
-            if (i != -1) {
-                let name = fileName.substring(i + 1);
-                if (types[type] == name.toLocaleLowerCase()) {
-                    return true;
-                }
-            }
-            Vue.prototype.$message.error("请选择正确的文件格式")
-            return false;
-        }
-        /**
-         * 
-         * @param  route 路径
-         * @param  data 数据
-         * @param  value 以data为首的执行字符串
-         */
     static changeObjectByRoute(route, data, value, key) {
         route = route.split('.');
         let evarStr = 'this';
@@ -60,5 +33,32 @@ class Utils {
             }
         });
         return url;
+    }
+    static getColorStringFormObject(object) {
+        function getDexStr(params) {
+            return params != undefined ? params.toString(16) : "";
+        }
+        return "#" + getDexStr(object.r) + getDexStr(object.g) + getDexStr(object.b) + getDexStr(object.a);
+    }
+    static getColorObjectFormString(string, isDex = false) {
+        string = string.substring(1);
+        let data = {
+            r: string.substring(0, 2),
+            g: string.substring(2, 4),
+        };
+        if (string.length > 6) {
+            data.b = string.substring(4, 6);
+            data.a = string.substring(6);
+        } else {
+            data.b = string.substring(4);
+        }
+        if (isDex) {
+            return data;
+        }
+        let intData = { r: parseInt(data.r, 16), g: parseInt(data.g, 16), b: parseInt(data.b, 16) };
+        if (data.a != undefined) {
+            intData.a = parseInt(data.a, 16);
+        }
+        return intData;
     }
 }
