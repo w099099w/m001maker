@@ -400,15 +400,12 @@ new Vue({
             };
             login();
         }
-        // let history = new ReadHistory();
-        // history.getData().then(data => {
-        //     this.History = data;
-        // });
-        this.assetDb = this.$refs.asset[0];
-        new Http("http://10.0.30.117/download").Request('get', '/m001237102c00e681746d1b8f0b39ef51ed911/f15e42b7-9ed8-28de-f397-14912738673a/1634017589745/Asset/interactive.txt').then(data => {
-            console.log(data);
-            data ? this.assetDb.AddRemoteAssets(data, 'http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/f15e42b7-9ed8-28de-f397-14912738673a/1634017589745', 'M001') : null;
+        let history = new ReadHistory();
+        history.getData().then(data => {
+            this.History = data;
         });
+        this.assetDb = this.$refs.asset[0];
+
         // 
         // console.log(this.assetDb);
     },
@@ -421,8 +418,13 @@ new Vue({
         handleOpen(key, keyPath) {
             console.log(key, keyPath);
         },
-        handleClose(key, keyPath) {
+        loadHistory(key, keyPath) {
             console.log(key, keyPath);
+            let deskID = keyPath[1].substr(keyPath[1].lastIndexOf("-") + 1);
+            new Http("http://10.0.30.117/download").Request('get', `/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskID]}/Asset/interactive.txt`).then(data => {
+                console.log(data);
+                data ? this.assetDb.AddRemoteAssets(data, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskID]}`, 'M001') : null;
+            });
         },
         setDialog(type) {
             this.dialogType = type;

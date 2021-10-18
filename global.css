@@ -24,6 +24,11 @@
 .mainbody .left .el-row .el-col-12 {
   width: 100% !important;
 }
+.mainbody .left .el-menu-item,
+.mainbody .left .el-submenu__title {
+  height: 40px !important;
+  line-height: 40px !important;
+}
 .mainbody .right {
   flex-grow: 1;
   display: flex;

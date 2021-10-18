@@ -8,7 +8,7 @@ class ReadHistory {
             let arr = dom.querySelectorAll("[href]");
             for (let i = 0; i < arr.length; ++i) {
                 if (arr[i].innerHTML.lastIndexOf("/") != -1 && arr[i].innerHTML != "../") {
-                    this.data.push(arr[i].innerHTML.substr(0, arr[i].innerHTML.length - 2));
+                    this.data.push(arr[i].innerHTML.substr(0, arr[i].innerHTML.length - 1));
                 }
             }
         });

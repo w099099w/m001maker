@@ -489,7 +489,7 @@ Vue.component("asset", {
 	<div style="width:100%;height:100%">
 		<el-tabs class="assetBox" @tab-click="onChangeAsset" v-model="assetType" type="border-card">
 			<el-tab-pane class="assetTab">
-                <span slot="label"><i style="font-size:20px"class="mdi mdi-image"></i> 图片</span>
+                <span slot="label"><i style="font-size:20px"></i> 图片</span>
 				<div class="horizontal" style="width:100%;height:100% " >
 					<assetlist v class="assetList" :click="clickAsset" :remove="removeAsset" :items="asset"></assetlist>
 					<div style="flex:3; text-align: center;">
