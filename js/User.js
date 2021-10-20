@@ -4,6 +4,10 @@ class User {
         User.appSecret = "2fe3895f329633b91342879f1556d25a37dcefc6cbe7e8013ae41d701ffc5f32";
         User.setToken();
         User.deskID = Date.now();
+        User.deskIDCacke = User.deskID;
+    }
+    static resumeDeskID() {
+        User.deskID = User.deskIDCacke;
     }
     static removeToken() {
         localStorage.removeItem("userAccount");

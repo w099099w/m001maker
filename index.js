@@ -420,11 +420,16 @@ new Vue({
         },
         loadHistory(key, keyPath) {
             console.log(key, keyPath);
-            let deskID = keyPath[1].substr(keyPath[1].lastIndexOf("-") + 1);
-            new Http("http://10.0.30.117/download").Request('get', `/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskID]}/Asset/interactive.txt`).then(data => {
-                console.log(data);
-                data ? this.assetDb.AddRemoteAssets(data, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskID]}`, 'M001') : null;
-            });
+            let deskIndex = keyPath[1].substr(keyPath[1].lastIndexOf("-") + 1);
+            this.assetDb.RemoveAllAssets();
+            if (!this.History[deskIndex].interactive) {
+                new Http("http://10.0.30.117/download").Request('get', `/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}/Asset/interactive.txt`).then(data => {
+                    data ? this.assetDb.AddRemoteAssets(data, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001') : null;
+                });
+                User.deskID = this.History[deskIndex].deskID;
+            } else {
+                this.assetDb.AddRemoteAssets(this.History[deskIndex].interactive, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001');
+            }
         },
         setDialog(type) {
             this.dialogType = type;
@@ -473,7 +478,6 @@ new Vue({
             delete this.interactive[typeStr][interactiveKey];
         },
         handlePreview(e, assetDb) {
-            this.assetDb = assetDb;
             switch (e) {
                 case '0':
                     this.fileList.image = assetDb.GetAllImage();

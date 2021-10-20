@@ -153,7 +153,24 @@ class EffectFile {
             this.EffectData.delete(name);
         }
     }
+    RemoveAllEffectData() {
+        this.EffectData.forEach(item => {
+            item.Files.forEach(citem => {
+                if (citem.url) {
+                    URL.revokeObjectURL(citem.URL);
+                }
+            });
+        });
+        this.AllFile.forEach(item => {
+            if (item.url) {
+                URL.revokeObjectURL(item.url);
+            }
+        });
+        this.AllFile = [];
+        this.EffectData.clear();
+    }
     GetEffectData() {
+        console.log("DATA", this.EffectData, this.AllFile);
         let files = [...this.AllFile];
         let tdata = [];
         this.EffectData.forEach((value, key) => {
@@ -267,6 +284,22 @@ class SpineFile {
             this.SpineData.delete(name);
         }
     }
+    RemoveAllSpineData() {
+        this.SpineData.forEach(item => {
+            item.Files.forEach(citem => {
+                if (citem.url) {
+                    URL.revokeObjectURL(citem.URL);
+                }
+            });
+        });
+        this.AllFile.forEach(item => {
+            if (item.url) {
+                URL.revokeObjectURL(item.url);
+            }
+        });
+        this.AllFile = [];
+        this.SpineData.clear();
+    }
     GetSPine(name, files, remove = false) {
         let spData = this.SpineData.get(name);
         if (spData) {
@@ -340,6 +373,14 @@ class AssetData {
     RemoveAudio(name) {
         this.Audio.delete(name);
     }
+    RemoveAllAudio() {
+        this.Audio.forEach(item => {
+            if (item.url) {
+                URL.revokeObjectURL(item.url);
+            }
+        });
+        this.Audio.clear();
+    }
     AddImage(name, realName, gameName, file, url = "") {
         let image = this.Images.get(name);
         image = new FileData(name, realName, gameName, 'image', file, url);
@@ -362,6 +403,14 @@ class AssetData {
     RemoveImage(name) {
         this.Images.delete(name);
     }
+    RemoveAllImage() {
+        this.Images.forEach(item => {
+            if (item.url) {
+                URL.revokeObjectURL(item.url);
+            }
+        });
+        this.Images.clear();
+    }
     AddSpineFile(name, realName, gameName, file, type, url = "", callBack) {
         this.SpineFile.AddFile(name, realName, gameName, 'spine', file, type, url, callBack);
     }
@@ -373,6 +422,9 @@ class AssetData {
     }
     RemoveSpine(name) {
         return this.SpineFile.RemoveSpineData(name);
+    }
+    RemoveAllSpine() {
+        this.SpineFile.RemoveAllSpineData();
     }
     GetSpineByName(name) {
         return this.SpineFile.GetSpineByName(name);
@@ -388,6 +440,9 @@ class AssetData {
     }
     RemoveEffect(name) {
         this.EffectFile.RemoveEffectData(name);
+    }
+    RemoveAllEffect() {
+        this.EffectFile.RemoveAllEffectData();
     }
     GetEffectByName(name) {
         return this.EffectFile.GetEffectByName(name);
@@ -491,7 +546,7 @@ Vue.component("asset", {
 			<el-tab-pane class="assetTab">
                 <span slot="label"><i style="font-size:20px"></i> 图片</span>
 				<div class="horizontal" style="width:100%;height:100% " >
-					<assetlist v class="assetList" :click="clickAsset" :remove="removeAsset" :items="asset"></assetlist>
+					<assetlist class="assetList" :click="clickAsset" :remove="removeAsset" :items="asset"></assetlist>
 					<div style="flex:3; text-align: center;">
 					    <div class="imageView" :style="'background-image:url(' + imageURL + ')'"></div>
 					</div>
@@ -710,7 +765,7 @@ Vue.component("asset", {
             f.forEach(e => {
                 let name = { name: e.name, type: e.type };
                 if (this.game) name.name = name.name.replace(this.game + "_", "");
-                d.push(name)
+                d.push(name);
             });
             return d;
         },
@@ -769,7 +824,7 @@ Vue.component("asset", {
          * @returns [string]
          */
         GetAllEffect() {
-            return this.assets.GetAllEffects()
+            return this.assets.GetAllEffects();
         },
         /**
          * 通过名字获取特效资源信息 
@@ -814,6 +869,13 @@ Vue.component("asset", {
                     this.onchange(i, this);
                 }
             }
+        },
+        RemoveAllAssets() {
+            this.assets.RemoveAllEffect();
+            this.assets.RemoveAllSpine();
+            this.assets.RemoveAllImage();
+            this.assets.RemoveAllAudio();
+            this.asset = [];
         }
     }
 });

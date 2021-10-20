@@ -131,7 +131,7 @@
                                     <i class="mdi mdi-history" style="font-size:20px"></i>
                                     <span>历史记录</span>
                                 </template>
-                                <el-menu-item v-for="(item,index) in History" :index="'1'+'-'+index">{{item}}</el-menu-item>
+                                <el-menu-item v-for="(item,index) in History" :index="'1'+'-'+index">{{item.deskID}}</el-menu-item>
                             </el-submenu>
                         </el-menu>
                     </el-col>
