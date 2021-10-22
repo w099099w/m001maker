@@ -2,7 +2,8 @@ const DialogType = {
     Hide: -1,
     Login: 0,
     Upload: 1,
-    Download: 2
+    Download: 2,
+    TIP: 3,
 };
 new Vue({
     el: '#app',
@@ -25,7 +26,6 @@ new Vue({
                 ]
             },
             Anim_GuideAudio: [],
-            showCache: [new PageCache()],
             buttonNum: [
                 4, 3, 2, 3, 4
             ],
@@ -98,24 +98,24 @@ new Vue({
                 layout: "A", // 布局
                 questionText: "", // 题目文字
             }, // 题库模板
-            bgList: MakerList.bgList,
-            uiList: MakerList.uiList,
-            plotAnimList: MakerList.plotAnimList,
-            plotAnimSwitchList: MakerList.plotAnimSwitchList,
-            guideSwitchList: MakerList.guideSwitchList,
-            manualSwitchList: MakerList.manualSwitchList,
-            openStepAnimSwitch: MakerList.openStepAnimSwitch,
-            stepAnimSwitchList: MakerList.stepAnimSwitchList,
-            openLevelPassAnimSwitch: MakerList.openLevelPassAnimSwitch,
-            levelPassAnimList: MakerList.levelPassAnimList,
-            openSumupAnimSwitch: MakerList.openSumupAnimSwitch,
-            sumupAnimList: MakerList.sumupAnimList,
-            openEveryLevelAnimSwitch: MakerList.openEveryLevelAnimSwitch,
-            everyLevelAnimSwitchList: MakerList.everyLevelAnimSwitchList,
-            selectEffectList: MakerList.selectEffectList,
-            outTimeinputList: MakerList.outTimeinputList,
-            scrreenShoot: MakerList.scrreenShoot,
-            questionVoice: MakerList.questionVoice,
+            bgList: new MakerList().bgList,
+            uiList: new MakerList().uiList,
+            plotAnimList: new MakerList().plotAnimList,
+            plotAnimSwitchList: new MakerList().plotAnimSwitchList,
+            guideSwitchList: new MakerList().guideSwitchList,
+            manualSwitchList: new MakerList().manualSwitchList,
+            openStepAnimSwitch: new MakerList().openStepAnimSwitch,
+            stepAnimSwitchList: new MakerList().stepAnimSwitchList,
+            openLevelPassAnimSwitch: new MakerList().openLevelPassAnimSwitch,
+            levelPassAnimList: new MakerList().levelPassAnimList,
+            openSumupAnimSwitch: new MakerList().openSumupAnimSwitch,
+            sumupAnimList: new MakerList().sumupAnimList,
+            openEveryLevelAnimSwitch: new MakerList().openEveryLevelAnimSwitch,
+            everyLevelAnimSwitchList: new MakerList().everyLevelAnimSwitchList,
+            selectEffectList: new MakerList().selectEffectList,
+            outTimeinputList: new MakerList().outTimeinputList,
+            scrreenShoot: new MakerList().scrreenShoot,
+            questionVoice: new MakerList().questionVoice,
             upLoading: true,
             showPage: true,
             assetDb: null,
@@ -135,6 +135,10 @@ new Vue({
                 show: false,
                 str: "",
             },
+            tip: {
+                title: "",
+                str: "",
+            },
             dialogType: -1,
             isVisible: false,
             download: false,
@@ -142,6 +146,7 @@ new Vue({
             History: [],
             progresState: null,
             hideTimeOut: 0,
+            MainDataBase: new CurrentData(),
         };
     },
     directives: {
@@ -214,7 +219,7 @@ new Vue({
         },
         setPlane: {
             get() {
-                return this.showCache[this.questionIndex].buttonPlane;
+                return this.currentQuestion.select_Fixed.length == 0;
             },
             set(value) {
                 if (value) {
@@ -223,11 +228,13 @@ new Vue({
                     this.questionCache.radom_Fixed = new RadomSelect();
                     this.currentQuestion.select_Fixed = [];
                     this.currentPriview.select_Fixed = [];
+                    this.questionCache.select_Fixed = [];
                 } else {
                     if (this.currentQuestion.select_Fixed.length < this.buttonNum[this.currentQuestion.layoutID % 5]) {
                         for (let i = this.currentQuestion.select_Fixed.length; i < this.buttonNum[this.currentQuestion.layoutID % 5]; ++i) {
                             this.currentQuestion.select_Fixed.push(new Button(i > 0 ? false : true));
                             this.currentPriview.select_Fixed.push(new Button(i > 0 ? false : true));
+                            console.log(JSON.parse(JSON.stringify(this.questionCache)));
                             this.questionCache.select_Fixed.push(new Button(i > 0 ? false : true));
                         }
                     } else {
@@ -237,8 +244,8 @@ new Vue({
                     }
                     this.currentPriview.radom_Fixed = new RadomSelect();
                     this.currentQuestion.radom_Fixed = new RadomSelect();
+                    this.questionCache.radom_Fixed = new RadomSelect();
                 }
-                this.showCache[this.questionIndex].buttonPlane = value;
             }
         },
         tabIndex: {
@@ -283,13 +290,14 @@ new Vue({
         },
         /** 当前题库 */
         currentQuestion() {
-            return this.config.BaseConfig.Question_DataBase[this.questionIndex][0] || this.config.BaseConfig.Question_DataBase[0][0];
+            console.log(this.MainDataBase.config.BaseConfig.Question_DataBase, this.questionIndex);
+            return this.MainDataBase.config.BaseConfig.Question_DataBase[this.questionIndex][0];
         },
         currentPriview() {
-            return this.previewData.BaseConfig.Question_DataBase[this.questionIndex][0] || this.previewData.BaseConfig.Question_DataBase[0][0];
+            return this.MainDataBase.priviewData.BaseConfig.Question_DataBase[this.questionIndex][0];
         },
         questionCache() {
-            return this.showCache[this.questionIndex] || this.showCache[0];
+            return this.MainDataBase.showData.BaseConfig.Question_DataBase[this.questionIndex][0];
         },
         layOutText: {
             get() {
@@ -318,11 +326,11 @@ new Vue({
             set(value) {
                 if (this.currentQuestion.voiceAnwserRight.length < value) {
                     for (let i = this.currentQuestion.voiceAnwserRight.length; i < value; ++i) {
-                        this.questionCache.rightAudio.push("");
+                        this.questionCache.voiceAnwserRight.push("");
                         this.currentQuestion.voiceAnwserRight.push("");
                     }
                 } else {
-                    this.questionCache.rightAudio.splice(value, this.questionCache.rightAudio.length - value);
+                    this.questionCache.voiceAnwserRight.splice(value, this.questionCache.voiceAnwserRight.length - value);
                     this.currentQuestion.voiceAnwserRight.splice(value, this.currentQuestion.voiceAnwserRight.length - value);
                 }
             }
@@ -334,11 +342,11 @@ new Vue({
             set(value) {
                 if (this.currentQuestion.voiceAnwserWrong.length < value) {
                     for (let i = this.currentQuestion.voiceAnwserWrong.length; i < value; ++i) {
-                        this.questionCache.wrongAudio.push("");
+                        this.questionCache.voiceAnwserWrong.push("");
                         this.currentQuestion.voiceAnwserWrong.push("");
                     }
                 } else {
-                    this.questionCache.wrongAudio.splice(value, this.questionCache.wrongAudio.length - value);
+                    this.questionCache.voiceAnwserWrong.splice(value, this.questionCache.voiceAnwserWrong.length - value);
                     this.currentQuestion.voiceAnwserWrong.splice(value, this.currentQuestion.voiceAnwserWrong.length - value);
                 }
             }
@@ -360,6 +368,9 @@ new Vue({
     },
     // 页面加载完成
     mounted() {
+        this.assetDb = this.$refs.asset[0];
+        this.MainDataBase.assetDb = this.$refs.asset[0];
+        this.ChangeData();
         document.onselectstart = () => { return false; };
         this.visiblePriview();
         window.onresize = this.visiblePriview.bind(this);
@@ -404,10 +415,7 @@ new Vue({
         history.getData().then(data => {
             this.History = data;
         });
-        this.assetDb = this.$refs.asset[0];
 
-        // 
-        // console.log(this.assetDb);
     },
     beforeCreate() {
         new User();
@@ -415,11 +423,38 @@ new Vue({
     },
     // 方法集合
     methods: {
+        ChangeData() {
+            setTimeout(() => {
+                this.bgList = this.MainDataBase.makeList.bgList;
+                this.uiList = this.MainDataBase.makeList.uiList;
+                this.plotAnimList = this.MainDataBase.makeList.plotAnimList;
+                this.plotAnimSwitchList = this.MainDataBase.makeList.plotAnimSwitchList;
+                this.guideSwitchList = this.MainDataBase.makeList.guideSwitchList;
+                this.manualSwitchList = this.MainDataBase.makeList.manualSwitchList;
+                this.openStepAnimSwitch = this.MainDataBase.makeList.openStepAnimSwitch;
+                this.stepAnimSwitchList = this.MainDataBase.makeList.stepAnimSwitchList;
+                this.openLevelPassAnimSwitch = this.MainDataBase.makeList.openLevelPassAnimSwitch;
+                this.levelPassAnimList = this.MainDataBase.makeList.levelPassAnimList;
+                this.openSumupAnimSwitch = this.MainDataBase.makeList.openSumupAnimSwitch;
+                this.sumupAnimList = this.MainDataBase.makeList.sumupAnimList;
+                this.openEveryLevelAnimSwitch = this.MainDataBase.makeList.openEveryLevelAnimSwitch;
+                this.everyLevelAnimSwitchList = this.MainDataBase.makeList.everyLevelAnimSwitchList;
+                this.selectEffectList = this.MainDataBase.makeList.selectEffectList;
+                this.scrreenShoot = this.MainDataBase.makeList.scrreenShoot;
+                this.questionVoice = this.MainDataBase.makeList.questionVoice;
+                this.previewData = this.MainDataBase.priviewData;
+                this.Button = this.MainDataBase.showData.OtherList.Button;
+                this.ButtonFlash = this.MainDataBase.showData.OtherList.ButtonFlash;
+            }, 0);
+            console.log(this.config);
+        },
         handleOpen(key, keyPath) {
             console.log(key, keyPath);
         },
         loadHistory(key, keyPath) {
-            console.log(key, keyPath);
+            this.setDialog(DialogType.TIP);
+            this.tip.title = "提示";
+            this.tip.str = "您正在操作历史记录,请选择修改后的提交方式(注: 当次选择不可撤销)!";
             let deskIndex = keyPath[1].substr(keyPath[1].lastIndexOf("-") + 1);
             this.assetDb.RemoveAllAssets();
             if (!this.History[deskIndex].interactive) {
@@ -430,9 +465,26 @@ new Vue({
             } else {
                 this.assetDb.AddRemoteAssets(this.History[deskIndex].interactive, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001');
             }
+
+            console.log("源文件", JSON.parse(JSON.stringify(this.History[deskIndex].interactive)), JSON.parse(JSON.stringify(this.History[deskIndex].config.BaseConfig)), JSON.parse(JSON.stringify(this.History[deskIndex].config.OtherList)));
+            ConfigData.instance.setData(this.History[deskIndex].config.BaseConfig, this.History[deskIndex].config.OtherList);
+            this.MainDataBase.setConfig(this.History[deskIndex].config.BaseConfig, this.History[deskIndex].config.OtherList);
+            let changeLength = this.History[deskIndex].config.BaseConfig.Question_DataBase.length - (this.editableTabs.length - 2);
+            if (changeLength != 0) {
+                for (let i = 0; i < Math.abs(changeLength); ++i) {
+                    if (changeLength > 0) {
+                        this.addTab(false);
+                    } else {
+                        this.removeTab(false);
+                    }
+                }
+            }
+            this.ChangeData();
         },
         setDialog(type) {
             this.dialogType = type;
+            this.tip.title = "";
+            this.tip.str = "";
             if (type == DialogType.Hide) {
                 this.current.filename = "";
                 this.current.progress = 0;
@@ -479,13 +531,13 @@ new Vue({
         },
         handlePreview(e, assetDb) {
             switch (e) {
-                case '0':
+                case 0:
                     this.fileList.image = assetDb.GetAllImage();
                     break;
-                case '1':
+                case 1:
                     this.fileList.sound = assetDb.GetAllAudio();
                     break;
-                case '2':
+                case 2:
                     {
                         let arr = assetDb.GetAllSpine();
                         this.fileList.spine = arr.map((element) => {
@@ -493,7 +545,7 @@ new Vue({
                         });
                     }
                     break;
-                case '3':
+                case 3:
                     {
                         let arr = assetDb.GetAllEffect();
                         this.fileList.particle = arr.map((element) => {
@@ -728,7 +780,7 @@ new Vue({
         checkConfig() {
             for (let i = 0; i < this.config.BaseConfig.Question_DataBase.length; ++i) {
                 let item = this.config.BaseConfig.Question_DataBase[i][0];
-                let buttonPlane = this.showCache[i].buttonPlane;
+                let buttonPlane = this.config.BaseConfig.Question_DataBase[i][0].select_Fixed.length == 0;
                 if (!buttonPlane) {
                     let rightId = 0;
                     let right = item.select_Fixed.filter((citem, index) => {
@@ -793,26 +845,31 @@ new Vue({
             this.tabIndex = e.index;
             document.querySelector(".el-tabs__content").scrollTop = 0;
         },
-        addTab() {
+        addTab(addQuestion = true) {
             this.editableTabs.push({
                 title: `题库${this.maxTabIndex-1}`,
                 name: String(this.maxTabIndex),
             });
-            this.showCache.push(new PageCache());
-            this.previewData.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
-            this.config.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
-            this.tabIndex = `${this.maxTabIndex - 1}`;
-            this.setPlane = false;
+            if (addQuestion) {
+                this.MainDataBase.priviewData.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
+                this.MainDataBase.showData.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
+                this.MainDataBase.config.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
+                this.tabIndex = `${this.maxTabIndex - 1}`;
+                this.setPlane = false;
+            }
             document.querySelector(".el-tabs__content").scrollTop = 0;
         },
-        removeTab() {
+        removeTab(removeQuestion = true) {
             if (this.maxTabIndex === 3) {
                 this.$message.error("您应当至少包含一题");
                 return;
             }
-            this.editableTabs.splice(Number(this.tabIndex), 1);
-            this.showCache.splice(Number(this.tabIndex), 1);
-            this.config.BaseConfig.Question_DataBase.splice(this.tabIndex - 2, 1);
+            this.editableTabs.splice(-1, 1);
+            if (removeQuestion) {
+                this.MainDataBase.priviewData.BaseConfig.Question_DataBase.splice(this.tabIndex - 2, 1);
+                this.MainDataBase.showData.BaseConfig.Question_DataBase.splice(this.tabIndex - 2, 1);
+                this.MainDataBase.config.BaseConfig.Question_DataBase.splice(this.tabIndex - 2, 1);
+            }
             this.editableTabs.forEach((item, index) => {
                 if (index > 1) {
                     item.title = `题库${index-1}`;
@@ -821,6 +878,15 @@ new Vue({
             });
             //已删除maxTabIndex则取消-1
             this.tabIndex = `${this.tabIndex != this.maxTabIndex ? this.tabIndex : this.tabIndex - 1}`;
+        },
+        debug() {
+            console.log(ConfigData.instance, this.currentQuestion);
+        },
+        dialog_MB_OK() {
+            this.setDialog(DialogType.Hide);
+        },
+        dialog_MB_NO() {
+            this.setDialog(DialogType.Hide);
         }
     }
 });

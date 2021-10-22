@@ -30,7 +30,7 @@ class ReadHistory {
                         }
                         let check = false;
                         for (let i in interactive.assets) {
-                            if (Object.keys(interactive.assets[i]).length != 0) {
+                            if (Object.keys(interactive.assets[i]).length != 0 && i !== 'gameConfig') {
                                 check = true;
                                 break;
                             }

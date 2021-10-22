@@ -133,7 +133,11 @@ class Config {
         return {
             BaseConfig: this.BaseConfig,
             OtherList: this.OtherList
-        }
+        };
+    }
+    setData(BaseConfig, OtherList) {
+        this.BaseConfig = BaseConfig;
+        this.OtherList = OtherList;
     }
 }
 class PreviewData extends Config {
@@ -245,29 +249,6 @@ class Button {
         this.image = "";
         this.voice = "";
         this.isRight = isRight;
-    }
-}
-class PageCache {
-    constructor() {
-        this.rightAudio = [];
-        this.wrongAudio = [];
-        this.select_Fixed = [];
-        this.buttonPlane = false;
-        this.selectDataBaseType = "0";
-        this.feedBackAnim = {
-            right: {
-                anim: "",
-                voice: ""
-            },
-            wrong: {
-                anim: "",
-                voice: ""
-            },
-            plot: {
-                anim: "",
-                voice: ""
-            }
-        };
     }
 }
 class RadomSelect {

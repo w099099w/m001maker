@@ -16,6 +16,7 @@
         <div class="header">
             <h1>M001Maker</h1>
             <div>
+                <el-button size="small" @click="debug" type="primary">Debug</el-button>
                 <el-button size="small" @click="exportConfig" type="primary">导出</el-button>
                 <el-button size="small" @click="preview" type="primary">预览</el-button>
             </div>
@@ -131,19 +132,20 @@
                                     <i class="mdi mdi-history" style="font-size:20px"></i>
                                     <span>历史记录</span>
                                 </template>
-                                <el-menu-item v-for="(item,index) in History" :index="'1'+'-'+index">{{item.deskID}}</el-menu-item>
+                                <el-menu-item v-for="(item,index) in History" :index="'1'+'-'+index">
+                                    <span class="mdi mdi-cloud-print-outline" style="font-size:20px"></span> {{item.deskID}}
+                                </el-menu-item>
                             </el-submenu>
                         </el-menu>
                     </el-col>
                 </el-row>
             </div>
-            <div v-if="true" class="right">
-                <div class="list">
-                    <el-button class="add-btn" size="small" @click="addTab">
+            <div v-if="true " class="right ">
+                <div class="list ">
+                    <el-button class="add-btn " size="small " @click="addTab ">
                         添加题库
                     </el-button>
-                    <el-button v-if="editableTabsValue > 1" class="add-btn" size="small" @click="removeTab">
-                        删除当前题库
+                    <el-button v-if="editableTabsValue> 1" class="add-btn" size="small" @click="removeTab"> 删除当前题库
                     </el-button>
                     <el-tabs v-model="editableTabsValue" type="card" @tab-click="changTabs" :before-leave="switchTabs">
                         <el-tab-pane v-for="(item, index) in editableTabs" :key="item.name" :label="item.title" :name="item.name">
@@ -251,18 +253,18 @@
                                             <div class="inlineItem" v-if="config.BaseConfig.Anim_Guide.isEnable">
                                                 <div class="item">
                                                     <div class="tips">引导动画资源:</div>
-                                                    <el-select class="my-el-select" v-model="guideRes" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.spine.guideAnim.src')">
+                                                    <el-select class="my-el-select" v-model="MainDataBase.showData.OtherList.spine.guideAnim.src" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.spine.guideAnim.src')">
                                                         <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
                                                         </el-option>
                                                     </el-select>
                                                 </div>
                                                 <div class="item">
                                                     <span class="tips">引导动画配音资源数量:</span>
-                                                    <el-input-number class="myinput" v-model="guideSize" controls-position="right" :min="1" :max="9"></el-input-number>
+                                                    <el-input-number class="myinput" v-model="MainDataBase.showData.BaseConfig.Anim_Guide.src.length" controls-position="right" :min="1" :max="9"></el-input-number>
                                                 </div>
-                                                <div v-for="(element,key) in config.BaseConfig.Anim_Guide.src" :key="key" class="audioList">
+                                                <div v-for="(element,key) in MainDataBase.showData.BaseConfig.Anim_Guide.src" :key="key" class="audioList">
                                                     <span class="target">步骤{{key+1}}使用的配音:</span>
-                                                    <el-select class="my-el-select" v-model="Anim_GuideAudio[key]" filterable placeholder="请选择" @change="selectResult($event,'sound','BaseConfig.Anim_Guide.src',key)">
+                                                    <el-select class="my-el-select" v-model="MainDataBase.showData.BaseConfig.Anim_Guide.src[key]" filterable placeholder="请选择" @change="selectResult($event,'sound','BaseConfig.Anim_Guide.src',key)">
                                                         <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                         </el-option>
                                                     </el-select>
@@ -280,34 +282,34 @@
                                         <my-switch-list :open="config.BaseConfig.Anim_EveryQuestion.isEnable" :data="everyLevelAnimSwitchList" :selectcallback="selectResult "></my-switch-list>
                                         <my-switch-list :data="openSumupAnimSwitch" :selectcallback="selectResult"></my-switch-list>
                                         <my-select-list :open="config.BaseConfig.Anim_Sumup" :data="sumupAnimList" :file="fileList" :selectcallback="selectResult"></my-select-list>
-                                        <div class="button">
+                                        <div class="button" v-if="MainDataBase">
                                             <p style="width: 520px;text-align: center;border-bottom: 1px solid #000;" class="itemText">主反馈动画设置</p>
                                             <div class="item">
                                                 <span class="tips" style="font-size: 14px; font-weight: 600;">反馈动画资源:</span>
-                                                <el-select class="my-el-select" v-model="feedBackAnim.src" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.spine.feedBackAnim.src')">
+                                                <el-select class="my-el-select" v-model="MainDataBase.showData.OtherList.spine.feedBackAnim.src" filterable placeholder="请选择" @change="selectResult($event,'spine','OtherList.spine.feedBackAnim.src')">
                                                     <el-option v-for="citem in fileList.spine" :key="citem" :label="citem" :value="citem">
                                                     </el-option>
                                                 </el-select>
                                             </div>
                                             <el-collapse-transition>
-                                                <div v-if="config.OtherList.spine.feedBackAnim.src">
+                                                <div v-if="MainDataBase.showData.OtherList.spine.feedBackAnim.src">
                                                     <div class="item">
                                                         <span class="tips" style="font-size: 14px; font-weight: 600;">init动作反馈配音资源:</span>
-                                                        <el-select class="my-el-select" v-model="feedBackAnim.anim[2].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.2.voice')" clearable>
+                                                        <el-select class="my-el-select" v-model="MainDataBase.showData.OtherList.spine.feedBackAnim.anim[2].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.2.voice')" clearable>
                                                             <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                             </el-option>
                                                         </el-select>
                                                     </div>
                                                     <div class="item">
                                                         <span class="tips" style="font-size: 14px; font-weight: 600;">idle动作反馈配音资源:</span>
-                                                        <el-select class="my-el-select" v-model="feedBackAnim.anim[1].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.1.voice')" clearable>
+                                                        <el-select class="my-el-select" v-model="MainDataBase.showData.OtherList.spine.feedBackAnim.anim[1].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.1.voice')" clearable>
                                                             <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                             </el-option>
                                                         </el-select>
                                                     </div>
                                                     <div class="item">
                                                         <span class="tips" style="font-size: 14px; font-weight: 600;">finish动作反馈配音资源:</span>
-                                                        <el-select class="my-el-select" v-model="feedBackAnim.anim[0].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.0.voice')" clearable>
+                                                        <el-select class="my-el-select" v-model="MainDataBase.showData.OtherList.spine.feedBackAnim.anim[0].voice" filterable placeholder="请选择" @change="selectResult($event,'sound','OtherList.spine.feedBackAnim.anim.0.voice')" clearable>
                                                             <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                             </el-option>
                                                         </el-select>
@@ -332,7 +334,7 @@
                                             </div>
                                         </div>
                                         <my-switch-list :question="currentQuestion" :data="scrreenShoot" :selectcallback="selectResultByQuestion"></my-switch-list>
-                                        <my-select-list :question="currentQuestion" :data="questionVoice" :file="fileList" :selectcallback="selectResultByQuestion"></my-select-list>
+                                        <my-select-list :question="questionCache" :data="questionVoice" :file="fileList" :selectcallback="selectResultByQuestion"></my-select-list>
                                         <el-collapse-transition>
                                             <div v-if="currentQuestion.voiceTargetGuide.res">
                                                 <div style="display: flex;margin-top: 3px;" v-for='(element,key,index) in currentQuestion.selectGuide' :key=index>
@@ -355,7 +357,7 @@
                                             </div>
                                             <div v-for="(element,key) in currentQuestion.voiceAnwserRight" :key="key" class="audioList">
                                                 <span class="target">正确音效{{key+1}}:</span>
-                                                <el-select class="my-el-select" v-model="questionCache.rightAudio[key]" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','voiceAnwserRight',key)">
+                                                <el-select class="my-el-select" v-model="questionCache.voiceAnwserRight[key]" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','voiceAnwserRight',key)">
                                                     <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                     </el-option>
                                                 </el-select>
@@ -368,7 +370,7 @@
                                             </div>
                                             <div v-for="(element,key) in currentQuestion.voiceAnwserWrong" :key="key" class="audioList">
                                                 <span class="target">错误音效{{key+1}}:</span>
-                                                <el-select class="my-el-select" v-model="questionCache.wrongAudio[key]" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','voiceAnwserWrong',key)">
+                                                <el-select class="my-el-select" v-model="questionCache.voiceAnwserWrong[key]" filterable placeholder="请选择" @change="selectResultByQuestion($event,'sound','voiceAnwserWrong',key)">
                                                     <el-option v-for="citem in fileList.sound" :key="citem" :label="citem" :value="citem">
                                                     </el-option>
                                                 </el-select>
@@ -501,7 +503,7 @@
                         </el-tab-pane>
                     </el-tabs>
                 </div>
-                <el-dialog class="dialog" :close-on-click-modal="false" @close="abortUpload" width="600px" :visible.sync="centerDialogVisible" width="30% " center>
+                <el-dialog class="dialog" :title="tip.title" :close-on-click-modal="false" @close="abortUpload" width="600px" :visible.sync="centerDialogVisible" width="30% " center>
                     <div v-if="dialogType==1">
                         <div class="progress">
                             <div class="detal">
@@ -551,24 +553,51 @@
                             <div class="dot5"></div>
                         </div>
                     </div>
-                    <span slot="footer" class="dialog-footer">
+                    <div v-else-if="dialogType==3" class="tip">
+                        <div>
+                            <div class="left">
+                                <i class="mdi mdi-information-outline"></i>
+                            </div>
+                            <div class="right">
+                                <p class="str">{{tip.str}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <span v-if='dialogType==3' slot="footer" class="dialog-footer">
+                        <el-button  type="primary" plain @click="dialog_MB_OK">新项提交</el-button>
+                        <el-button  type="primary" plain @click="dialog_MB_NO">修改项目</el-button>
+                    </span>
+                    <span v-else slot="footer" class="dialog-footer">
                         <el-button v-if="dialogType != 0 " @click="abortUpload">终止</el-button>
                         <el-button v-if="dialogType == 1" :disabled="pre" @click="loadPriview">预览</el-button>
                     </span>
                 </el-dialog>
             </div>
         </div>
-        <div class="copyright">Copyright © 2021 M001Maker DisignedBy pj.xia </div>
+        <div class="copyright">
+            <span class="mdi mdi-timer">
+                2021 
+                <span class="mdi mdi-gamepad-square-outline">
+                    M001
+                    <span class="mdi mdi-alpha-p-circle-outline">
+                        M001 Maker
+                    </span>
+            </span>
+            </span>
+        </div>
     </div>
+    <script src="./js/vue.js "></script>
+    <script src="./js/component/spine.js"></script>
+    <script src="./js/component/assetComponent.js "></script>
 
     <script src="./js/User.js"></script>
     <script src="./js/component/ReadHistory.js"></script>
     <script src="./js/MakerList.js"></script>
     <script src="./js/Config.js "></script>
+    <script src="./js/component/CurrentData.js"></script>
     <script src="./js/component/Loading.js"></script>
     <!-- 引入 Vue -->
-    <script src="./js/vue.js "></script>
-    <script src="./js/component/assetComponent.js "></script>
+
     <!-- 引入组件库 -->
     <script src="./js/element-ui.js "></script>
     <script src="./js/component/InputNumberList.js "></script>
