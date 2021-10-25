@@ -90,22 +90,7 @@ class Config {
                 replayAnim: {
                     src: ""
                 },
-                feedBackAnim: {
-                    src: "",
-                    anim: [{
-                            anim: "finish",
-                            voice: ""
-                        },
-                        {
-                            anim: "idle",
-                            voice: ""
-                        },
-                        {
-                            anim: "init",
-                            voice: ""
-                        }
-                    ]
-                },
+                feedBackAnim: new FeedBackAnim(),
             },
             QuestionBarImage: "",
             BGM: "",
@@ -138,6 +123,24 @@ class Config {
     setData(BaseConfig, OtherList) {
         this.BaseConfig = BaseConfig;
         this.OtherList = OtherList;
+    }
+}
+class FeedBackAnim {
+    constructor() {
+        this.src = "";
+        this.anim = [{
+                anim: "finish",
+                voice: ""
+            },
+            {
+                anim: "idle",
+                voice: ""
+            },
+            {
+                anim: "init",
+                voice: ""
+            }
+        ];
     }
 }
 class PreviewData extends Config {
@@ -180,8 +183,8 @@ class SelectListData extends Config {
     }
 }
 class Question {
-    constructor(id) {
-        this.index = id;
+    constructor() {
+        this.index = 0;
         this.layoutID = 0;
         this.questionContent = "";
         this.ScreenShoot = false;

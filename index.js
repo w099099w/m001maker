@@ -9,84 +9,25 @@ new Vue({
     el: '#app',
     data() {
         return {
-            feedBackAnim: {
-                src: "",
-                anim: [{
-                        anim: "finish",
-                        voice: ""
-                    },
-                    {
-                        anim: "idle",
-                        voice: ""
-                    },
-                    {
-                        anim: "init",
-                        voice: ""
-                    }
-                ]
-            },
             Anim_GuideAudio: [],
-            buttonNum: [
-                4, 3, 2, 3, 4
-            ],
+            buttonNum: [4, 3, 2, 3, 4],
             editableTabsValue: "0", // tabs 默认展开下标
-            editableTabs: [{
-                    title: '资源导入设置',
-                    name: '0',
-                },
-                {
-                    title: '游戏流程配置',
-                    name: '1',
-                },
-                {
-                    title: '题库1',
-                    name: '2',
-                }
+            editableTabs: [{ title: '资源导入设置', name: '0' }, { title: '游戏流程配置', name: '1' }, { title: '题库1', name: '2' }],
+            layOut: [
+                { key: 0, name: "A1" }, { key: 1, name: "A2" }, { key: 2, name: "A3" }, { key: 3, name: "A4" }, { key: 4, name: "A5" },
+                { key: 5, name: "B1" }, { key: 6, name: "B2" }, { key: 7, name: "B3" }, { key: 8, name: "B4" }, { key: 9, name: "B5" }
             ],
+            makerInfo: { userAccount: "", makerName: "M001Maker", gameName: "M001" },
+            rightTipPlane: [{ key: 0, name: "闪烁" }, { key: 1, name: "粒子动画" }, { key: 2, name: "骨骼动画" }],
+            feedBackInQuestion: [{ key: "正确反馈动画", objectKey: 'right' }, { key: "错误反馈动画", objectKey: 'wrong' }, { key: "剧情反馈动画", objectKey: 'plot' }],
             Button: [],
             ButtonFlash: [],
             guideRes: "",
-            layOut: [
-                { key: 0, name: "A1" },
-                { key: 1, name: "A2" },
-                { key: 2, name: "A3" },
-                { key: 3, name: "A4" },
-                { key: 4, name: "A5" },
-                { key: 5, name: "B1" },
-                { key: 6, name: "B2" },
-                { key: 7, name: "B3" },
-                { key: 8, name: "B4" },
-                { key: 9, name: "B5" }
-            ],
-            makerInfo: {
-                userAccount: "",
-                makerName: "M001Maker",
-                gameName: "M001"
-            },
-            rightTipPlane: [
-                { key: 0, name: "闪烁" },
-                { key: 1, name: "粒子动画" },
-                { key: 2, name: "骨骼动画" }
-            ],
-            feedBackInQuestion: [
-                { key: "正确反馈动画", objectKey: 'right' },
-                { key: "错误反馈动画", objectKey: 'wrong' },
-                { key: "剧情反馈动画", objectKey: 'plot' }
-            ],
-            fileList: {
-                sound: [],
-                image: [],
-                spine: [],
-                particle: []
-            },
+            fileList: { sound: [], image: [], spine: [], particle: [] },
             previewData: PreviewData.instance,
             config: ConfigData.instance,
             interactive: null,
             interactiveFile: null,
-            questionJson: {
-                layout: "A", // 布局
-                questionText: "", // 题目文字
-            }, // 题库模板
             bgList: new MakerList().bgList,
             uiList: new MakerList().uiList,
             plotAnimList: new MakerList().plotAnimList,
@@ -110,7 +51,6 @@ new Vue({
             assetDb: null,
             iguideSize: "1",
             questionIndex: 0,
-            add: 1,
             remoteAssetDb: "",
             current: {
                 progress: 0,
@@ -125,13 +65,8 @@ new Vue({
                 str: "",
             },
             dialogData: null,
-            tip: {
-                title: "",
-                str: "",
-            },
             dialogType: -1,
             isVisible: false,
-            download: false,
             HTTP: new Http("http://10.0.30.117:10999"),
             History: [],
             progresState: null,
@@ -283,7 +218,6 @@ new Vue({
         },
         /** 当前题库 */
         currentQuestion() {
-            console.log(this.MainDataBase.config.BaseConfig.Question_DataBase, this.questionIndex);
             return this.MainDataBase.config.BaseConfig.Question_DataBase[this.questionIndex][0];
         },
         currentPriview() {
@@ -528,8 +462,6 @@ new Vue({
         },
         setDialog(type) {
             this.dialogType = type;
-            this.tip.title = "";
-            this.tip.str = "";
             if (type == DialogType.Hide) {
                 this.current.filename = "";
                 this.current.progress = 0;
@@ -645,7 +577,6 @@ new Vue({
                 return;
             }
             let result = this.getResultFile(type, e);
-            console.log(result)
             Utils.changeObjectByRoute.call(this, `interactiveFile.assets.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "config." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "previewData." + route, result, "data.url", key);
@@ -720,12 +651,10 @@ new Vue({
 
         },
         abortUpload() {
-            this.download = false;
             this.upLoading = false;
             this.setDialog(DialogType.Hide);
             this.dotHide();
         },
-        /** 预览 */
         async preview() {
             if (!this.checkConfig()) return;
             this.dotShow();
@@ -733,7 +662,6 @@ new Vue({
             this.setDialog(DialogType.Upload);
             this.interactive.assets.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
             let count = this.getFileCount();
-            console.log("计数", count, this.interactiveFile, this.interactive)
             if (count != 0) {
                 let currentUploadId = 0;
                 this.total.count = `0/${count}`;
@@ -846,6 +774,7 @@ new Vue({
         checkConfig() {
             for (let i = 0; i < this.config.BaseConfig.Question_DataBase.length; ++i) {
                 let item = this.config.BaseConfig.Question_DataBase[i][0];
+                item.index = i;
                 let buttonPlane = this.config.BaseConfig.Question_DataBase[i][0].select_Fixed.length == 0;
                 if (!buttonPlane) {
                     let rightId = 0;
@@ -906,7 +835,6 @@ new Vue({
                 this.$message.error(error.msg);
             });
         },
-        // 切换题库
         changTabs(e) {
             this.tabIndex = e.index;
             document.querySelector(".el-tabs__content").scrollTop = 0;
@@ -917,9 +845,9 @@ new Vue({
                 name: String(this.maxTabIndex),
             });
             if (addQuestion) {
-                this.MainDataBase.priviewData.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
-                this.MainDataBase.showData.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
-                this.MainDataBase.config.BaseConfig.Question_DataBase.push([new Question(this.add++)]);
+                this.MainDataBase.priviewData.BaseConfig.Question_DataBase.push([new Question()]);
+                this.MainDataBase.showData.BaseConfig.Question_DataBase.push([new Question()]);
+                this.MainDataBase.config.BaseConfig.Question_DataBase.push([new Question()]);
                 this.tabIndex = `${this.maxTabIndex - 1}`;
                 this.setPlane = false;
             }
@@ -942,7 +870,6 @@ new Vue({
                     item.name = `${index}`;
                 }
             });
-            //已删除maxTabIndex则取消-1
             this.tabIndex = `${this.tabIndex != this.maxTabIndex ? this.tabIndex : this.tabIndex - 1}`;
         },
         debug() {
@@ -951,7 +878,6 @@ new Vue({
         dialog_MB_OK() {
             this.setDialog(DialogType.Hide);
             this.dialogData.callResult(DialogButton.MB_YES);
-            //User.resumeDeskID();
         },
         dialog_MB_NO() {
             this.setDialog(DialogType.Hide);
