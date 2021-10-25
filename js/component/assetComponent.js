@@ -1020,7 +1020,7 @@ Vue.component("asset", {
                 } else {
 
                 }
-                if (self && self.onchange) self.onchange(type, self);
+                if (self && self.onchange) self.onchange(type.toString(), self);
             }, 500);
         },
         removeAsset(e) {
@@ -1045,7 +1045,7 @@ Vue.component("asset", {
                 this.assets.RemoveEffect(e.name);
                 this.asset = this.assets.GetAllEffects();
             }
-            if (this.onchange) this.onchange(this.assetType, this);
+            if (this.onchange) this.onchange(this.assetType.toString(), this);
             if (this.delete_event) this.delete_event(removeFile, this.assetType);
         },
         clickAsset(e) {
@@ -1185,7 +1185,7 @@ Vue.component("asset", {
             this.onChangeAsset();
             if (this.onchange) {
                 for (let i = 0; i < 4; i++) {
-                    this.onchange(i, this);
+                    this.onchange(i.toString(), this);
                 }
             }
         },
