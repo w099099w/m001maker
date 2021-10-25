@@ -257,3 +257,15 @@ class RadomSelect {
         this.wrong = [];
     }
 }
+class Interactive {
+    constructor() {
+        this.assets = {
+            image: {},
+            sound: {},
+            spine: {},
+            particle: {},
+            gameConfig: {}
+        };
+        this.interactive = {};
+    }
+}

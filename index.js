@@ -81,19 +81,8 @@ new Vue({
             },
             previewData: PreviewData.instance,
             config: ConfigData.instance,
-            interactive: {
-                image: {},
-                sound: {},
-                gameConfig: {},
-                spine: {},
-                particle: {}
-            },
-            interactiveFile: {
-                image: {},
-                sound: {},
-                spine: {},
-                particle: {}
-            },
+            interactive: null,
+            interactiveFile: null,
             questionJson: {
                 layout: "A", // 布局
                 questionText: "", // 题目文字
@@ -135,6 +124,7 @@ new Vue({
                 show: false,
                 str: "",
             },
+            dialogData: null,
             tip: {
                 title: "",
                 str: "",
@@ -147,6 +137,7 @@ new Vue({
             progresState: null,
             hideTimeOut: 0,
             MainDataBase: new CurrentData(),
+            newTabsID: '1'
         };
     },
     directives: {
@@ -176,6 +167,9 @@ new Vue({
         }
     },
     computed: {
+        loadDeskID() {
+            return User.deskIDCache;
+        },
         pre() {
             return !this.remoteAssetDb;
         },
@@ -234,7 +228,6 @@ new Vue({
                         for (let i = this.currentQuestion.select_Fixed.length; i < this.buttonNum[this.currentQuestion.layoutID % 5]; ++i) {
                             this.currentQuestion.select_Fixed.push(new Button(i > 0 ? false : true));
                             this.currentPriview.select_Fixed.push(new Button(i > 0 ? false : true));
-                            console.log(JSON.parse(JSON.stringify(this.questionCache)));
                             this.questionCache.select_Fixed.push(new Button(i > 0 ? false : true));
                         }
                     } else {
@@ -374,6 +367,18 @@ new Vue({
         document.onselectstart = () => { return false; };
         this.visiblePriview();
         window.onresize = this.visiblePriview.bind(this);
+        document.querySelector(".dialog .dialog-footer").addEventListener("DOMNodeInserted", () => {
+            let dom = document.querySelector(".dialog .dialog-footer");
+            setTimeout(() => {
+                if (dom.children.length == 1) {
+                    dom.classList.remove("double");
+                    dom.classList.add("single");
+                } else {
+                    dom.classList.remove("single");
+                    dom.classList.add("double");
+                }
+            }, 0);
+        });
         this.setPlane = false;
         if (User.token) {
             this.makerInfo.userAccount = User.token;
@@ -415,7 +420,6 @@ new Vue({
         history.getData().then(data => {
             this.History = data;
         });
-
     },
     beforeCreate() {
         new User();
@@ -445,41 +449,82 @@ new Vue({
                 this.previewData = this.MainDataBase.priviewData;
                 this.Button = this.MainDataBase.showData.OtherList.Button;
                 this.ButtonFlash = this.MainDataBase.showData.OtherList.ButtonFlash;
+                this.interactive = this.MainDataBase.interactive;
+                this.interactiveFile = this.MainDataBase.interactiveFile;
             }, 0);
-            console.log(this.config);
         },
         handleOpen(key, keyPath) {
-            console.log(key, keyPath);
+
+        },
+        loadingHistory(key, keyPath) {
+            let tabsID = key.substr(0, 1);
+            if (this.newTabsID == key) return;
+            this.assetDb.RemoveAllAssets();
+            switch (tabsID) {
+                case "1":
+                    {
+                        this.MainDataBase.setConfig(new ConfigData().BaseConfig, new ConfigData().OtherList, new Interactive());
+                        for (let i = 0; i < this.maxTabIndex - 3; ++i) {
+                            this.removeTab(false);
+                        }
+                        this.setPlane = false;
+                    }
+                    break;
+                case "2":
+                    {
+                        let deskIndex = keyPath[1].substr(keyPath[1].lastIndexOf("-") + 1);
+                        this.setDialog(DialogType.TIP);
+                        this.dialogData = new DialogChangeTip(`您正在操作历史记录,您当前的所有修改将被应用于历史记录:${this.History[deskIndex].deskID}`, DialogIcon.WARNING);
+                        this.dialogData.setButtonType(DialogButton.MB_YES);
+                        if (!this.History[deskIndex].interactive) {
+                            new Http("http://10.0.30.117/download").Request('get', `/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}/Asset/interactive.txt`).then(data => {
+                                data ? this.assetDb.AddRemoteAssets(data, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001') : null;
+                            });
+
+                        } else {
+                            this.assetDb.AddRemoteAssets(this.History[deskIndex].interactive, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001');
+                        }
+                        User.deskID = this.History[deskIndex].deskID;
+                        console.log("源文件", JSON.parse(JSON.stringify(this.History[deskIndex].interactive)), JSON.parse(JSON.stringify(this.History[deskIndex].config.BaseConfig)), JSON.parse(JSON.stringify(this.History[deskIndex].config.OtherList)));
+                        this.MainDataBase.setConfig(this.History[deskIndex].config.BaseConfig, this.History[deskIndex].config.OtherList, this.History[deskIndex].interactive);
+                        let changeLength = this.History[deskIndex].config.BaseConfig.Question_DataBase.length - (this.editableTabs.length - 2);
+                        if (changeLength != 0) {
+                            for (let i = 0; i < Math.abs(changeLength); ++i) {
+                                if (changeLength > 0) {
+                                    this.addTab(false);
+                                } else {
+                                    this.removeTab(false);
+                                }
+                            }
+                        }
+
+                    }
+                    break;
+            }
+            this.newTabsID = key;
+            this.ChangeData();
         },
         loadHistory(key, keyPath) {
-            this.setDialog(DialogType.TIP);
-            this.tip.title = "提示";
-            this.tip.str = "您正在操作历史记录,请选择修改后的提交方式(注: 当次选择不可撤销)!";
-            let deskIndex = keyPath[1].substr(keyPath[1].lastIndexOf("-") + 1);
-            this.assetDb.RemoveAllAssets();
-            if (!this.History[deskIndex].interactive) {
-                new Http("http://10.0.30.117/download").Request('get', `/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}/Asset/interactive.txt`).then(data => {
-                    data ? this.assetDb.AddRemoteAssets(data, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001') : null;
-                });
-                User.deskID = this.History[deskIndex].deskID;
-            } else {
-                this.assetDb.AddRemoteAssets(this.History[deskIndex].interactive, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001');
-            }
-
-            console.log("源文件", JSON.parse(JSON.stringify(this.History[deskIndex].interactive)), JSON.parse(JSON.stringify(this.History[deskIndex].config.BaseConfig)), JSON.parse(JSON.stringify(this.History[deskIndex].config.OtherList)));
-            ConfigData.instance.setData(this.History[deskIndex].config.BaseConfig, this.History[deskIndex].config.OtherList);
-            this.MainDataBase.setConfig(this.History[deskIndex].config.BaseConfig, this.History[deskIndex].config.OtherList);
-            let changeLength = this.History[deskIndex].config.BaseConfig.Question_DataBase.length - (this.editableTabs.length - 2);
-            if (changeLength != 0) {
-                for (let i = 0; i < Math.abs(changeLength); ++i) {
-                    if (changeLength > 0) {
-                        this.addTab(false);
-                    } else {
-                        this.removeTab(false);
+            if (this.newTabsID == '1') {
+                this.setDialog(DialogType.TIP);
+                this.dialogData = new DialogChangeTip("切换至历史记录会清空当前所有的配置,您确定切换吗?", DialogIcon.WARNING, { key, keyPath }, (ButtonType) => {
+                    switch (ButtonType) {
+                        case DialogButton.MB_YES:
+                            {
+                                this.loadingHistory(this.dialogData.params.key, this.dialogData.params.keyPath);
+                            }
+                            break;
+                        case DialogButton.MB_NO:
+                            {
+                                this.$refs.menu.activeIndex = "1";
+                            }
+                            break;
                     }
-                }
+                });
+                return;
+            } else {
+                this.loadingHistory(key, keyPath);
             }
-            this.ChangeData();
         },
         setDialog(type) {
             this.dialogType = type;
@@ -531,13 +576,13 @@ new Vue({
         },
         handlePreview(e, assetDb) {
             switch (e) {
-                case 0:
+                case '0':
                     this.fileList.image = assetDb.GetAllImage();
                     break;
-                case 1:
+                case '1':
                     this.fileList.sound = assetDb.GetAllAudio();
                     break;
-                case 2:
+                case '2':
                     {
                         let arr = assetDb.GetAllSpine();
                         this.fileList.spine = arr.map((element) => {
@@ -545,7 +590,7 @@ new Vue({
                         });
                     }
                     break;
-                case 3:
+                case '3':
                     {
                         let arr = assetDb.GetAllEffect();
                         this.fileList.particle = arr.map((element) => {
@@ -600,10 +645,11 @@ new Vue({
                 return;
             }
             let result = this.getResultFile(type, e);
-            Utils.changeObjectByRoute.call(this, `interactiveFile.${type}.${result.interactiveKey}`, result.name, 'data');
+            console.log(result)
+            Utils.changeObjectByRoute.call(this, `interactiveFile.assets.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "config." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "previewData." + route, result, "data.url", key);
-            Utils.changeObjectByRoute.call(this, `interactive.${type}.${result.interactiveKey}`, `Asset/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
+            Utils.changeObjectByRoute.call(this, `interactive.assets.${type}.${result.interactiveKey}`, `Asset/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
         },
         selectResultByQuestion(e, type, route, key) {
             if (type == 'bool') {
@@ -616,10 +662,10 @@ new Vue({
                 return;
             }
             let result = this.getResultFile(type, e);
-            Utils.changeObjectByRoute.call(this, `interactiveFile.${type}.${result.interactiveKey}`, result.name, 'data');
+            Utils.changeObjectByRoute.call(this, `interactiveFile.assets.${type}.${result.interactiveKey}`, result.name, 'data');
             Utils.changeObjectByRoute.call(this, "currentQuestion." + route, result.interactiveKey, "data", key);
             Utils.changeObjectByRoute.call(this, "currentPriview." + route, result, "data.url", key);
-            Utils.changeObjectByRoute.call(this, `interactive.${type}.${result.interactiveKey}`, `Asset/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
+            Utils.changeObjectByRoute.call(this, `interactive.assets.${type}.${result.interactiveKey}`, `Asset/${this.makerInfo.gameName}/${type}/${result.name}`, 'data');
         },
         inputResult(e, route) {
             Utils.changeObjectByRoute.call(this, "config." + route, e, "data");
@@ -627,14 +673,23 @@ new Vue({
         },
         getFileCount() {
             let count = 0;
-            for (let key in this.interactiveFile) {
-                let item = this.interactiveFile[key];
+            for (let key in this.interactiveFile.assets) {
+                let item = this.interactiveFile.assets[key];
+                if (key == "gameConfig") continue;
                 if (key == 'sound' || key == 'image') {
-                    count += Object.keys(item).length;
+                    for (let citem in item[key]) {
+                        let fileData = key == 'image' ? this.assetDb.GetImageByName(citem) : this.assetDb.GetAudioByName(citem);
+                        if (!fileData.isLocal) {
+                            continue;
+                        }
+                        count++;
+                    }
                 } else {
                     for (let ckey in item) {
                         let citem = item[ckey];
                         let files = key == 'particle' ? this.assetDb.GetEffectByName(citem).Files : this.assetDb.GetSpineByName(citem).Files;
+                        let isLocal = key == 'particle' ? this.assetDb.GetEffectByName(citem).local : this.assetDb.GetSpineByName(citem).local;
+                        if (!isLocal) continue;
                         count += files.length;
                     }
                 }
@@ -652,13 +707,17 @@ new Vue({
             }
         },
         dotHide() {
-            let load = document.querySelector(".load");
-            for (let i = 0; i < load.children.length; ++i) {
-                if (load.children[i].className.substr(0, 3) == 'dot') {
-                    load.children[i].style.animationPlayState = "paused";
-                    load.children[i].style.display = 'none';
+            setTimeout(() => {
+                let load = document.querySelector(".load");
+                if (!load) return;
+                for (let i = 0; i < load.children.length; ++i) {
+                    if (load.children[i].className.substr(0, 3) == 'dot') {
+                        load.children[i].style.animationPlayState = "paused";
+                        load.children[i].style.display = 'none';
+                    }
                 }
-            }
+            }, 0);
+
         },
         abortUpload() {
             this.download = false;
@@ -672,13 +731,14 @@ new Vue({
             this.dotShow();
             this.upLoading = true;
             this.setDialog(DialogType.Upload);
-            this.interactive.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
+            this.interactive.assets.gameConfig[`${this.makerInfo.makerName.toLocaleUpperCase()}`] = `Asset/${this.makerInfo.gameName}/config`;
             let count = this.getFileCount();
+            console.log("计数", count, this.interactiveFile, this.interactive)
             if (count != 0) {
                 let currentUploadId = 0;
                 this.total.count = `0/${count}`;
-                for (let key in this.interactiveFile) {
-                    let item = this.interactiveFile[key];
+                for (let key in this.interactiveFile.assets) {
+                    let item = this.interactiveFile.assets[key];
                     switch (key) {
                         case 'sound':
                         case 'image':
@@ -686,6 +746,9 @@ new Vue({
                                 for (let ckey in item) {
                                     let citem = item[ckey];
                                     let fileData = key == 'image' ? this.assetDb.GetImageByName(citem) : this.assetDb.GetAudioByName(citem);
+                                    if (!fileData.isLocal) {
+                                        continue;
+                                    }
                                     this.current.filename = fileData.realName;
                                     if (!this.upLoading) {
                                         return;
@@ -718,6 +781,9 @@ new Vue({
                                     let files = key == 'particle' ? this.assetDb.GetEffectByName(citem).Files : this.assetDb.GetSpineByName(citem).Files;
                                     files.forEach(async(ccitem) => {
                                         let fileData = ccitem;
+                                        if (!fileData.isLocal) {
+                                            return;
+                                        }
                                         this.current.filename = fileData.realName;
                                         if (!this.upLoading) {
                                             return;
@@ -758,7 +824,7 @@ new Vue({
                 this.$message.error(result.msg);
                 return;
             }
-            result = await this.HTTP.Request('post', '/clientApp/json', { fileName: "interactive", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset`, jsonString: { assets: this.interactive } });
+            result = await this.HTTP.Request('post', '/clientApp/json', { fileName: "interactive", filePath: `/${User.appID}/${User.UUID}/${User.deskID}/Asset`, jsonString: this.interactive });
             if (result.code != 0) {
                 this.dotHide();
                 this.$message.error(result.msg);
@@ -884,9 +950,12 @@ new Vue({
         },
         dialog_MB_OK() {
             this.setDialog(DialogType.Hide);
+            this.dialogData.callResult(DialogButton.MB_YES);
+            //User.resumeDeskID();
         },
         dialog_MB_NO() {
             this.setDialog(DialogType.Hide);
+            this.dialogData.callResult(DialogButton.MB_NO);
         }
     }
 });

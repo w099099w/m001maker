@@ -1,7 +1,7 @@
 Vue.component('my-select-list', {
     props: {
         selectcallback: Function,
-        file: {},
+        file: Object,
         data: [],
         open: undefined,
         question: Object
@@ -12,27 +12,27 @@ Vue.component('my-select-list', {
         };
     },
     watch: {
-        file: { //深度监听，可监听到对象、数组的变化
-            handler(val, oldVal) {
-                // if (this.data == []) return;
-                // this.data.some((item) => {
-                //     if (item.value) {
-                //         let result;
-                //         val[`${item.type}`].some(citem => {
-                //             if (citem === item.value) {
-                //                 result = citem;
-                //                 return true;
-                //             }
-                //         });
-                //         if (!result) {
-                //             this.$message.error("图片的引用资源已被删除,涉及的配置项为:" + item.key);
-                //             item.value = "";
-                //         }
-                //     }
-                // });
-            },
-            deep: true //true 深度监听
-        }
+        // file: { //深度监听，可监听到对象、数组的变化
+        //     handler(val, oldVal) {
+        //         // if (this.data == []) return;
+        //         // this.data.some((item) => {
+        //         //     if (item.value) {
+        //         //         let result;
+        //         //         val[`${item.type}`].some(citem => {
+        //         //             if (citem === item.value) {
+        //         //                 result = citem;
+        //         //                 return true;
+        //         //             }
+        //         //         });
+        //         //         if (!result) {
+        //         //             this.$message.error("图片的引用资源已被删除,涉及的配置项为:" + item.key);
+        //         //             item.value = "";
+        //         //         }
+        //         //     }
+        //         // });
+        //     },
+        //     deep: true //true 深度监听
+        // }
     },
     directives: {
         'content': {
@@ -51,6 +51,7 @@ Vue.component('my-select-list', {
     mounted() {
 
     },
+    methods: {},
     computed: {
         subData() {
             return (dataStruct) => {
@@ -74,7 +75,7 @@ Vue.component('my-select-list', {
                     case 'particle':
                         return this.file.particle;
                 }
-            }
+            };
         }
     },
     template: `

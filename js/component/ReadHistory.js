@@ -47,7 +47,6 @@ class ReadHistory {
     async getData(preCheck = true) {
         this.data = [];
         await this.RequestRemoteData(preCheck);
-        console.log(this.data);
         return this.data;
     }
 }

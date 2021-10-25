@@ -7,6 +7,8 @@ class CurrentData {
         this.config = ConfigData.instance;
         this.showData = SelectListData.instance;
         this.priviewData = PreviewData.instance;
+        this.interactive = new Interactive();
+        this.interactiveFile = new Interactive();
         this.makeList = new MakerList();
         this.assetDb = assetDb;
     }
@@ -40,13 +42,19 @@ class CurrentData {
     copyObject(data) {
         return JSON.parse(JSON.stringify(data));
     }
-    setConfig(BaseConfig, OtherList) {
+    setConfig(BaseConfig, OtherList, interactive) {
         this.config.setData(this.copyObject(BaseConfig), this.copyObject(OtherList));
         this.showData.setData(this.copyObject(BaseConfig), this.copyObject(OtherList));
         this.priviewData.setData(this.copyObject(BaseConfig), this.copyObject(OtherList));
         this.convertKey(this.showData, ConvertType.NAME);
         this.convertKey(this.priviewData, ConvertType.URL);
         console.log(this.showData, this.priviewData);
+        this.interactive = interactive;
+        for (let mainKey in interactive.assets) {
+            for (let key in this.interactive.assets[mainKey]) {
+                this.interactiveFile.assets[mainKey][key] = this.assetDb.interactiveConvertAssetName(key);
+            }
+        }
         this.makeList = new MakerList(this.question);
     }
 }

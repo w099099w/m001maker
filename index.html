@@ -126,13 +126,16 @@
             <div class="left">
                 <el-row class="tac">
                     <el-col :span="12">
-                        <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @select="loadHistory" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-                            <el-submenu index="1">
+                        <el-menu ref="menu" default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @select="loadHistory" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+                            <el-menu-item index="1">
+                                <span class="mdi mdi-new-box" style="font-size:18px"></span> {{loadDeskID}}
+                            </el-menu-item>
+                            <el-submenu index="2">
                                 <template slot="title">
                                     <i class="mdi mdi-history" style="font-size:20px"></i>
                                     <span>历史记录</span>
                                 </template>
-                                <el-menu-item v-for="(item,index) in History" :index="'1'+'-'+index">
+                                <el-menu-item v-for="(item,index) in History" :key="index" :index="'2'+'-'+index">
                                     <span class="mdi mdi-cloud-print-outline" style="font-size:20px"></span> {{item.deskID}}
                                 </el-menu-item>
                             </el-submenu>
@@ -503,7 +506,7 @@
                         </el-tab-pane>
                     </el-tabs>
                 </div>
-                <el-dialog class="dialog" :title="tip.title" :close-on-click-modal="false" @close="abortUpload" width="600px" :visible.sync="centerDialogVisible" width="30% " center>
+                <el-dialog class="dialog" :title="dialogData?dialogData.title:''" :close-on-click-modal="false" @close="abortUpload" width="600px" :visible.sync="centerDialogVisible" width="30% " center>
                     <div v-if="dialogType==1">
                         <div class="progress">
                             <div class="detal">
@@ -556,16 +559,18 @@
                     <div v-else-if="dialogType==3" class="tip">
                         <div>
                             <div class="left">
-                                <i class="mdi mdi-information-outline"></i>
+                                <i v-if="dialogData.content.icon == 2" class="mdi mdi-comment-question-outline"></i>
+                                <i v-else-if="dialogData.content.icon == 1" class="mdi mdi-information-outline"></i>
+                                <i v-else-if="dialogData.content.icon == 0" class="mdi mdi-cancel"></i>
                             </div>
                             <div class="right">
-                                <p class="str">{{tip.str}}</p>
+                                <p class="str">{{dialogData.content.body}}</p>
                             </div>
                         </div>
                     </div>
                     <span v-if='dialogType==3' slot="footer" class="dialog-footer">
-                        <el-button  type="primary" plain @click="dialog_MB_OK">新项提交</el-button>
-                        <el-button  type="primary" plain @click="dialog_MB_NO">修改项目</el-button>
+                        <el-button  v-if="dialogData.buttonType==1||dialogData.buttonType==2" type="primary" plain @click="dialog_MB_OK">确定</el-button>
+                        <el-button  v-if="dialogData.buttonType==2||dialogData.buttonType==3" type="primary" plain @click="dialog_MB_NO">取消</el-button>
                     </span>
                     <span v-else slot="footer" class="dialog-footer">
                         <el-button v-if="dialogType != 0 " @click="abortUpload">终止</el-button>
@@ -585,11 +590,12 @@
             </span>
             </span>
         </div>
+
     </div>
     <script src="./js/vue.js "></script>
     <script src="./js/component/spine.js"></script>
     <script src="./js/component/assetComponent.js "></script>
-
+    <script src="./js/component/DialogData.js"></script>
     <script src="./js/User.js"></script>
     <script src="./js/component/ReadHistory.js"></script>
     <script src="./js/MakerList.js"></script>
