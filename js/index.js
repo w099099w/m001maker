@@ -7,74 +7,7 @@ const DialogType = {
 };
 new Vue({
     el: '#app',
-    data() {
-        return {
-            Anim_GuideAudio: [],
-            buttonNum: [4, 3, 2, 3, 4],
-            editableTabsValue: "0", // tabs 默认展开下标
-            editableTabs: [{ title: '资源导入设置', name: '0' }, { title: '游戏流程配置', name: '1' }, { title: '题库1', name: '2' }],
-            layOut: [
-                { key: 0, name: "A1" }, { key: 1, name: "A2" }, { key: 2, name: "A3" }, { key: 3, name: "A4" }, { key: 4, name: "A5" },
-                { key: 5, name: "B1" }, { key: 6, name: "B2" }, { key: 7, name: "B3" }, { key: 8, name: "B4" }, { key: 9, name: "B5" }
-            ],
-            makerInfo: { userAccount: "", makerName: "M001Maker", gameName: "M001" },
-            rightTipPlane: [{ key: 0, name: "闪烁" }, { key: 1, name: "粒子动画" }, { key: 2, name: "骨骼动画" }],
-            feedBackInQuestion: [{ key: "正确反馈动画", objectKey: 'right' }, { key: "错误反馈动画", objectKey: 'wrong' }, { key: "剧情反馈动画", objectKey: 'plot' }],
-            Button: [],
-            ButtonFlash: [],
-            guideRes: "",
-            fileList: { sound: [], image: [], spine: [], particle: [] },
-            previewData: PreviewData.instance,
-            config: ConfigData.instance,
-            interactive: null,
-            interactiveFile: null,
-            bgList: new MakerList().bgList,
-            uiList: new MakerList().uiList,
-            plotAnimList: new MakerList().plotAnimList,
-            plotAnimSwitchList: new MakerList().plotAnimSwitchList,
-            guideSwitchList: new MakerList().guideSwitchList,
-            manualSwitchList: new MakerList().manualSwitchList,
-            openStepAnimSwitch: new MakerList().openStepAnimSwitch,
-            stepAnimSwitchList: new MakerList().stepAnimSwitchList,
-            openLevelPassAnimSwitch: new MakerList().openLevelPassAnimSwitch,
-            levelPassAnimList: new MakerList().levelPassAnimList,
-            openSumupAnimSwitch: new MakerList().openSumupAnimSwitch,
-            sumupAnimList: new MakerList().sumupAnimList,
-            openEveryLevelAnimSwitch: new MakerList().openEveryLevelAnimSwitch,
-            everyLevelAnimSwitchList: new MakerList().everyLevelAnimSwitchList,
-            selectEffectList: new MakerList().selectEffectList,
-            outTimeinputList: new MakerList().outTimeinputList,
-            scrreenShoot: new MakerList().scrreenShoot,
-            questionVoice: new MakerList().questionVoice,
-            upLoading: true,
-            showPage: true,
-            assetDb: null,
-            iguideSize: "1",
-            questionIndex: 0,
-            remoteAssetDb: "",
-            current: {
-                progress: 0,
-                filename: ""
-            },
-            total: {
-                progress: 0,
-                count: "0/0"
-            },
-            login: {
-                show: false,
-                str: "",
-            },
-            dialogData: null,
-            dialogType: -1,
-            isVisible: false,
-            HTTP: new Http("http://10.0.30.117:10999"),
-            History: [],
-            progresState: null,
-            hideTimeOut: 0,
-            MainDataBase: new CurrentData(),
-            newTabsID: '1'
-        };
-    },
+    data: () => new AppData(),
     directives: {
         'color': {
             bind: function(el, binding) {
@@ -82,14 +15,6 @@ new Vue({
             },
             update: function(el, binding) {
                 el.style.color = binding.value;
-            }
-        },
-        'text': {
-            bind(el, binding) {
-                el.text = binding.value;
-            },
-            update(el, binding) {
-                el.text = binding.value;
             }
         },
         'state': {
@@ -297,7 +222,8 @@ new Vue({
     mounted() {
         this.assetDb = this.$refs.asset[0];
         this.MainDataBase.assetDb = this.$refs.asset[0];
-        this.ChangeData();
+        console.log(this)
+        this.$data.ChangeData();
         document.onselectstart = () => { return false; };
         this.visiblePriview();
         window.onresize = this.visiblePriview.bind(this);
@@ -361,35 +287,7 @@ new Vue({
     },
     // 方法集合
     methods: {
-        ChangeData() {
-            setTimeout(() => {
-                this.bgList = this.MainDataBase.makeList.bgList;
-                this.uiList = this.MainDataBase.makeList.uiList;
-                this.plotAnimList = this.MainDataBase.makeList.plotAnimList;
-                this.plotAnimSwitchList = this.MainDataBase.makeList.plotAnimSwitchList;
-                this.guideSwitchList = this.MainDataBase.makeList.guideSwitchList;
-                this.manualSwitchList = this.MainDataBase.makeList.manualSwitchList;
-                this.openStepAnimSwitch = this.MainDataBase.makeList.openStepAnimSwitch;
-                this.stepAnimSwitchList = this.MainDataBase.makeList.stepAnimSwitchList;
-                this.openLevelPassAnimSwitch = this.MainDataBase.makeList.openLevelPassAnimSwitch;
-                this.levelPassAnimList = this.MainDataBase.makeList.levelPassAnimList;
-                this.openSumupAnimSwitch = this.MainDataBase.makeList.openSumupAnimSwitch;
-                this.sumupAnimList = this.MainDataBase.makeList.sumupAnimList;
-                this.openEveryLevelAnimSwitch = this.MainDataBase.makeList.openEveryLevelAnimSwitch;
-                this.everyLevelAnimSwitchList = this.MainDataBase.makeList.everyLevelAnimSwitchList;
-                this.selectEffectList = this.MainDataBase.makeList.selectEffectList;
-                this.scrreenShoot = this.MainDataBase.makeList.scrreenShoot;
-                this.questionVoice = this.MainDataBase.makeList.questionVoice;
-                this.previewData = this.MainDataBase.priviewData;
-                this.Button = this.MainDataBase.showData.OtherList.Button;
-                this.ButtonFlash = this.MainDataBase.showData.OtherList.ButtonFlash;
-                this.interactive = this.MainDataBase.interactive;
-                this.interactiveFile = this.MainDataBase.interactiveFile;
-            }, 0);
-        },
-        handleOpen(key, keyPath) {
-
-        },
+        handleOpen(key, keyPath) {},
         loadingHistory(key, keyPath) {
             let tabsID = key.substr(0, 1);
             if (this.newTabsID == key) return;
@@ -436,10 +334,11 @@ new Vue({
                     break;
             }
             this.newTabsID = key;
-            this.ChangeData();
+            this.$data.ChangeData();
         },
         loadHistory(key, keyPath) {
             if (this.newTabsID == '1') {
+                if (key == "1") return;
                 this.setDialog(DialogType.TIP);
                 this.dialogData = new DialogChangeTip("切换至历史记录会清空当前所有的配置,您确定切换吗?", DialogIcon.WARNING, { key, keyPath }, (ButtonType) => {
                     switch (ButtonType) {

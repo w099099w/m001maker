@@ -34,90 +34,90 @@
                     <div class="a101">
                         <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[0] && currentPriview.select_Fixed[0].image" :src="currentPriview.select_Fixed[0].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]">{{currentQuestion.select_Fixed[0].label}}</p>
                     </div>
                     <div class="a102">
                         <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[1] && currentPriview.select_Fixed[1].image" :src="currentPriview.select_Fixed[1].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]">{{currentQuestion.select_Fixed[1].label}}</p>
                     </div>
                     <div class="a103">
                         <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[2] && currentPriview.select_Fixed[2].image" :src="currentPriview.select_Fixed[2].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]">{{currentQuestion.select_Fixed[2].label}}</p>
                     </div>
                     <div class="a104">
                         <img class="buttonImage" v-if="previewData.OtherList.Button[0]" :src="previewData.OtherList.Button[0]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[3] && currentPriview.select_Fixed[3].image" :src="currentPriview.select_Fixed[3].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[3]" v-text="currentQuestion.select_Fixed[3].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[3]">{{currentQuestion.select_Fixed[3].label}}</p>
                     </div>
                 </div>
                 <div v-if="currentQuestion.layoutID%5==1">
                     <div class='a101'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[0] && currentPriview.select_Fixed[0].image" :src="currentPriview.select_Fixed[0].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]">{{currentQuestion.select_Fixed[0].label}}</p>
                     </div>
                     <div class='a102'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[1] && currentPriview.select_Fixed[1].image" :src="currentPriview.select_Fixed[1].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]">{{currentQuestion.select_Fixed[1].label}}</p>
                     </div>
                     <div class='a203'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[1]" :src="previewData.OtherList.Button[1]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[2] && currentPriview.select_Fixed[2].image" :src="currentPriview.select_Fixed[2].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]">{{currentQuestion.select_Fixed[2].label}}</p>
                     </div>
                 </div>
                 <div v-if="currentQuestion.layoutID%5==2">
                     <div class='a301'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[0] && currentPriview.select_Fixed[0].image" :src="currentPriview.select_Fixed[0].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]">{{currentQuestion.select_Fixed[0].label}}</p>
                     </div>
                     <div class='a302'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[2]" :src="previewData.OtherList.Button[2]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[1] && currentPriview.select_Fixed[1].image" :src="currentPriview.select_Fixed[1].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]">{{currentQuestion.select_Fixed[1].label}}</p>
                     </div>
                 </div>
                 <div v-if="currentQuestion.layoutID%5==3">
                     <div class='a401'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[0] && currentPriview.select_Fixed[0].image" :src="currentPriview.select_Fixed[0].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]">{{currentQuestion.select_Fixed[0].label}}</p>
                     </div>
                     <div class='a402'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[1] && currentPriview.select_Fixed[1].image" :src="currentPriview.select_Fixed[1].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]">{{currentQuestion.select_Fixed[1].label}}</p>
                     </div>
                     <div class='a403'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[3]" :src="previewData.OtherList.Button[3]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[2] && currentPriview.select_Fixed[2].image" :src="currentPriview.select_Fixed[2].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]">{{currentQuestion.select_Fixed[2].label}}</p>
                     </div>
                 </div>
                 <div v-if="currentQuestion.layoutID%5==4">
                     <div class='a501'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[0] && currentPriview.select_Fixed[0].image" :src="currentPriview.select_Fixed[0].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]" v-text="currentQuestion.select_Fixed[0].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[0]">{{currentQuestion.select_Fixed[0].label}}</p>
                     </div>
                     <div class='a502'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[1] && currentPriview.select_Fixed[1].image" :src="currentPriview.select_Fixed[1].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]" v-text="currentQuestion.select_Fixed[1].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[1]">{{currentQuestion.select_Fixed[1].label}}</p>
                     </div>
                     <div class='a503'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[2] && currentPriview.select_Fixed[2].image" :src="currentPriview.select_Fixed[2].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]" v-text="currentQuestion.select_Fixed[2].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[2]">{{currentQuestion.select_Fixed[2].label}}</p>
                     </div>
                     <div class='a504'>
                         <img class="buttonImage" v-if="previewData.OtherList.Button[4]" :src="previewData.OtherList.Button[4]">
                         <img class='itemImage' v-if="currentPriview.select_Fixed[3] && currentPriview.select_Fixed[3].image" :src="currentPriview.select_Fixed[3].image">
-                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[3]" v-text="currentQuestion.select_Fixed[3].label"></p>
+                        <p class="buttonLable" v-if="currentQuestion.select_Fixed[3]">{{currentQuestion.select_Fixed[3].label}}</p>
                     </div>
                 </div>
             </div>
@@ -341,7 +341,7 @@
                                         <el-collapse-transition>
                                             <div v-if="currentQuestion.voiceTargetGuide.res">
                                                 <div style="display: flex;margin-top: 3px;" v-for='(element,key,index) in currentQuestion.selectGuide' :key=index>
-                                                    <span class="itemText" style="width: 190px;" v-text="'选项'+key+'目标引导时间:'"></span>
+                                                    <span class="itemText" style="width: 190px;">选项{{key+1}}目标引导时间</span>
                                                     <span class="itemText">开始时间:</span>
                                                     <el-input-number class="myinput" v-model="currentQuestion.selectGuide[key].start" controls-position="right" :step="0.01" :precision="2" :min="0" :max="999"></el-input-number>
                                                     <span class="itemText" style="margin-left: 10px;">终止时间:</span>
@@ -592,30 +592,30 @@
         </div>
 
     </div>
-    <script src="./js/vue.js "></script>
-    <script src="./js/component/spine.js"></script>
-    <script src="./js/component/assetComponent.js "></script>
-    <script src="./js/component/DialogData.js"></script>
-    <script src="./js/User.js"></script>
-    <script src="./js/component/ReadHistory.js"></script>
-    <script src="./js/MakerList.js"></script>
-    <script src="./js/Config.js "></script>
-    <script src="./js/component/CurrentData.js"></script>
-    <script src="./js/component/Loading.js"></script>
-    <!-- 引入 Vue -->
-
+    <!-- 引入 主库 -->
+    <script src="./js/utils/vue.js "></script>
+    <script src="./js/utils/element-ui.js "></script>
+    <script src="./js/utils/spine.js"></script>
+    <script src="./js/utils/axios.js"></script>
+    <script src="./js/utils/Utils.js "></script>
     <!-- 引入组件库 -->
-    <script src="./js/element-ui.js "></script>
+    <script src="./js/component/assetComponent.js "></script>
     <script src="./js/component/InputNumberList.js "></script>
     <script src="./js/component/SelectList.js "></script>
-    <!-- <script src="./js/component/AssetData.js "></script> -->
-
     <script src="./js/component/SwitchList.js "></script>
-    <script src="./js/axios.js "></script>
-    <script src="./js/utils.js "></script>
-    <script src="./js/http.js "></script>
-    <script src="./js/upload.js "></script>
-    <script src="./index.js "></script>
+    <script src="./js/component/Loading.js"></script>
+    <script src="./js/component/DialogData.js"></script>
+    <script src="./js/component/CurrentData.js"></script>
+    <script src="./js/component/ReadHistory.js"></script>
+    <script src="./js/component/Http.js"></script>
+    <script src="./js/component/upload.js "></script>
+    <!-- 引入 配置 -->
+    <script src="./js/config/Config.js "></script>
+    <script src="./js/config/User.js"></script>
+    <script src="./js/config/MakerList.js"></script>
+    <!-- 引入 入口 -->
+    <script src="./js/AppData.js"></script>
+    <script src="./js/index.js "></script>
 </body>
 
 </html>
