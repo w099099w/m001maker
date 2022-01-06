@@ -23,6 +23,11 @@ class DialogData {
     setTitle(title) {
         this.title = title;
     }
+    callResult(type) {
+        if (this.callFunction) {
+            this.callFunction(type);
+        }
+    }
 }
 class DialogChangeTip extends DialogData {
     constructor(str, icon, params, callFunction) {
@@ -35,9 +40,15 @@ class DialogChangeTip extends DialogData {
         };
         this.params = params;
     }
-    callResult(type) {
-        if (this.callFunction) {
-            this.callFunction(type)
-        }
+}
+class DialogLoginTip extends DialogData {
+    constructor(str, callFunction) {
+        super(callFunction);
+        this.buttonType = DialogButton.MB_NULL;
+        this.title = '登陆';
+        this.content = {
+            show: false,
+            str: str
+        };
     }
 }

@@ -222,7 +222,6 @@ new Vue({
     mounted() {
         this.assetDb = this.$refs.asset[0];
         this.MainDataBase.assetDb = this.$refs.asset[0];
-        console.log(this)
         this.$data.ChangeData();
         document.onselectstart = () => { return false; };
         this.visiblePriview();
@@ -230,13 +229,8 @@ new Vue({
         document.querySelector(".dialog .dialog-footer").addEventListener("DOMNodeInserted", () => {
             let dom = document.querySelector(".dialog .dialog-footer");
             setTimeout(() => {
-                if (dom.children.length == 1) {
-                    dom.classList.remove("double");
-                    dom.classList.add("single");
-                } else {
-                    dom.classList.remove("single");
-                    dom.classList.add("double");
-                }
+                dom.children.length == 1 ? dom.classList.remove("double") : dom.classList.remove("single");
+                dom.children.length == 1 ? dom.classList.add("single") : dom.classList.add("double");
             }, 0);
         });
         this.setPlane = false;
@@ -244,28 +238,26 @@ new Vue({
             this.makerInfo.userAccount = User.token;
             this.HTTP.setToken(User.token);
         } else {
+            this.dialogData = new DialogLoginTip("正在登录...");
             this.setDialog(DialogType.Login);
             let requestData = { appID: User.appID, appSecret: User.appSecret };
-            this.login.show = true;
-            this.login.str = "正在登录...";
             let login = () => {
                 setTimeout(() => {
                     this.HTTP.Request("post", '/clientApp/login', requestData).then((data) => {
-                        this.login.str = data.code == 0 ? `登录成功!` : data.msg;
+                        this.dialogData.content.str = data.code == 0 ? `登录成功!` : data.msg;
                         this.dotHide();
                         if (data.code == 0) {
                             User.setToken(data.result.token.access_token);
                             this.HTTP.setToken(User.token);
                             setTimeout(() => {
                                 this.setDialog(DialogType.Hide);
-                                this.login.show = false;
                             }, 1000);
                         }
                     }).catch((error) => {
                         this.$message.error(error.msg);
                         let time = 5;
                         let id = setInterval(() => {
-                            this.login.str = `登录失败,将在${time--}秒后重试!`;
+                            this.dialogData.content.str = `登录失败,将在${time--}秒后重试!`;
                             if (time == 0) {
                                 login();
                                 clearInterval(id);
@@ -309,12 +301,11 @@ new Vue({
                         this.dialogData = new DialogChangeTip(`您正在操作历史记录,您当前的所有修改将被应用于历史记录:${this.History[deskIndex].deskID}`, DialogIcon.WARNING);
                         this.dialogData.setButtonType(DialogButton.MB_YES);
                         if (!this.History[deskIndex].interactive) {
-                            new Http("http://10.0.30.117/download").Request('get', `/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}/Asset/interactive.txt`).then(data => {
-                                data ? this.assetDb.AddRemoteAssets(data, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001') : null;
+                            new Http("http://10.0.30.203/download").Request('get', `/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}/Asset/interactive.txt`).then(data => {
+                                data ? this.assetDb.AddRemoteAssets(data, `http://10.0.30.203/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001') : null;
                             });
-
                         } else {
-                            this.assetDb.AddRemoteAssets(this.History[deskIndex].interactive, `http://10.0.30.117/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001');
+                            this.assetDb.AddRemoteAssets(this.History[deskIndex].interactive, `http://10.0.30.203/download/m001237102c00e681746d1b8f0b39ef51ed911/${User.UUID}/${this.History[deskIndex].deskID}`, 'M001');
                         }
                         User.deskID = this.History[deskIndex].deskID;
                         console.log("源文件", JSON.parse(JSON.stringify(this.History[deskIndex].interactive)), JSON.parse(JSON.stringify(this.History[deskIndex].config.BaseConfig)), JSON.parse(JSON.stringify(this.History[deskIndex].config.OtherList)));
@@ -414,20 +405,10 @@ new Vue({
                     this.fileList.sound = assetDb.GetAllAudio();
                     break;
                 case '2':
-                    {
-                        let arr = assetDb.GetAllSpine();
-                        this.fileList.spine = arr.map((element) => {
-                            return element.name;
-                        });
-                    }
+                    this.fileList.spine = assetDb.GetAllSpine().map((element) => element.name);
                     break;
                 case '3':
-                    {
-                        let arr = assetDb.GetAllEffect();
-                        this.fileList.particle = arr.map((element) => {
-                            return element.name;
-                        });
-                    }
+                    this.fileList.particle = assetDb.GetAllEffect().map((element) => element.name);
                     break;
             }
         },
@@ -446,11 +427,9 @@ new Vue({
                     break;
                 case 'spine':
                 case 'particle':
-                    {
-                        result = type == 'particle' ? this.assetDb.GetEffectByName(e) : this.assetDb.GetSpineByName(e);
-                        if (result) {
-                            result = { name: e, url: result.Files[0].url, interactiveKey: result.Files[0].interactiveKey };
-                        }
+                    result = type == 'particle' ? this.assetDb.GetEffectByName(e) : this.assetDb.GetSpineByName(e);
+                    if (result) {
+                        result = { name: e, url: result.Files[0].url, interactiveKey: result.Files[0].interactiveKey };
                     }
                     break;
             }
@@ -582,7 +561,6 @@ new Vue({
                                     }
                                     let rejectResult = null;
                                     let result = await uploadMultiple(this.HTTP, fileData.file, key == 'image' ? 'image' : 'sound', this.makerInfo, (progress) => {
-                                        console.log(progress);
                                         this.current.progress = progress;
                                     }, () => {
                                         this.total.count = `${++currentUploadId}/${count}`;
@@ -664,11 +642,11 @@ new Vue({
             this.total.progress = 100;
             this.current.progress = 100;
             this.$message.info('处理完成,预览已准备完成!');
-            this.remoteAssetDb = `http://10.0.30.117/download/${User.appID}/${User.UUID}/${User.deskID}`;
+            this.remoteAssetDb = `http://10.0.30.203/download/${User.appID}/${User.UUID}/${User.deskID}`;
         },
         loadPriview() {
             this.setDialog(DialogType.Hide);
-            window.open(`http://coolarr.com:8090/m001maker/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
+            window.open(`http://10.0.30.203/game-maker/M001Maker/web-desktop/index.html?assetsUrl=${this.remoteAssetDb}`);
         },
         checkConfig() {
             for (let i = 0; i < this.config.BaseConfig.Question_DataBase.length; ++i) {

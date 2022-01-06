@@ -51,14 +51,10 @@ class AppData {
             progress: 0,
             count: "0/0"
         };
-        this.login = {
-            show: false,
-            str: ""
-        };
         this.dialogData = null;
         this.dialogType = -1;
         this.isVisible = false;
-        this.HTTP = new Http("http://10.0.30.117:10999");
+        this.HTTP = new Http("http://10.0.30.203:10999");
         this.History = [];
         this.progresState = null;
         this.hideTimeOut = 0;

@@ -16,7 +16,7 @@
         <div class="header">
             <h1>M001Maker</h1>
             <div>
-                <el-button size="small" @click="debug" type="primary">Debug</el-button>
+                <!-- <el-button size="small" @click="debug" type="primary">Debug</el-button> -->
                 <el-button size="small" @click="exportConfig" type="primary">导出</el-button>
                 <el-button size="small" @click="preview" type="primary">预览</el-button>
             </div>
@@ -537,7 +537,7 @@
                             <div class="dot3"></div>
                             <div class="dot4"></div>
                             <div class="dot5"></div>
-                            <p>{{login.str}}</p>
+                            <p>{{dialogData.content.str}}</p>
                         </div>
                     </div>
                     <div v-else-if="dialogType==2" class="download">

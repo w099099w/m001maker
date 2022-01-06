@@ -10,7 +10,7 @@ class ReadHistory {
         this.data = [];
     }
     async RequestRemoteData(preCheck) {
-        let http = new Http("http://10.0.30.117/download");
+        let http = new Http("http://10.0.30.203/download");
         return http.Request('GET', `/${User.appID}/${User.UUID}`, null).then(async(res) => {
             let dom = new DOMParser().parseFromString(res, 'text/html');
             let arr = dom.querySelectorAll("[href]");
