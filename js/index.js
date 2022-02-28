@@ -486,7 +486,8 @@ new Vue({
                 let item = this.interactiveFile.assets[key];
                 if (key == "gameConfig") continue;
                 if (key == 'sound' || key == 'image') {
-                    for (let citem in item[key]) {
+                    for (let ckey in item) {
+                        let citem = item[ckey];
                         let fileData = key == 'image' ? this.assetDb.GetImageByName(citem) : this.assetDb.GetAudioByName(citem);
                         if (!fileData.isLocal) {
                             continue;
